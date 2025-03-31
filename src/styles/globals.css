@@ -1,0 +1,201 @@
+@import "tailwindcss";
+:root {
+  --background: #f1f5f9;
+  --background-secondary: #ffffff;
+  /* Botón primario */
+  --button: #3b82f6;
+  --button-hover: #2563eb;
+  --button-text: #ffffff;
+
+  /* Botón secundario */
+  --button-secondary: #ffffff;
+  --button-secondary-hover: #d1d5db;
+  --button-secondary-text: #1f2937;
+
+  /* Botón terciario */
+  --button-tertiary: #ffffff;
+  --button-tertiary-hover: #f3f4f6;
+  --button-tertiary-text: #111111;
+
+    /* Botón cuarto */
+  --navbar-cuarto: #ffffff;
+  --navbar-cuarto-hover: #f3f4f6;
+  --navbar-cuarto-text: #111111;
+  --navbar-cuarto-text-hover: #111111;
+
+  /* Botón de éxito */
+  --button-success: #10b981;
+  --button-success-hover: #059669;
+  --button-success-text: #ffffff;
+
+  /* Botón de advertencia */
+  --button-warning: #f59e0b;
+  --button-warning-hover: #d97706;
+  --button-warning-text: #ffffff;
+
+  /* Variables para íconos en modo claro */
+  --icon-secondary-bg: #111111;       /* Fondo oscuro para íconos en modo claro */
+  --icon-secondary-hover-bg: #5d6168; /* Fondo en hover en modo claro */
+  --icon-secondary-text: #f3f4f6;       /* Color del texto o ícono */
+
+  /* Botón de error/destructivo */
+  --button-danger: #ef4444;
+  --button-danger-hover: #dc2626;
+  --button-danger-text: #ffffff;
+  --foreground: #171717;
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+  --secondary: #f3f4f6;
+  --secondary-foreground: #111827;
+  --muted: #f3f4f6;
+  --muted-foreground: #6b7280;
+  --accent: #f3f4f6;
+  --accent-foreground: #111827;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --ring: #2563eb;
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: #1e1e1e;
+  --background-secondary: #111111;
+   /* Botón primario en dark */
+   --button: #3b82f6;
+   --button-hover: #60a5fa;
+   --button-text: #ffffff;
+ 
+   /* Botón secundario en dark */
+   --button-secondary: #5d6168;
+   --button-secondary-hover: #111827;
+   --button-secondary-text: #f3f4f6;
+ 
+   /* Botón terciario en dark */
+   --button-tertiary: #242425;
+   --button-tertiary-hover: #303031;
+   --button-tertiary-text: #f3f4f6;
+
+      /* Botón cuarto en dark */
+    --navbar-cuarto: #242425;
+    --navbar-cuarto-hover: #303031;
+    --navbar-cuarto-text: #f3f4f6;
+    --navbar-cuarto-text-hover: #111111;
+ 
+   /* Botón de éxito en dark */
+   --button-success: #22c55e;
+   --button-success-hover: #16a34a;
+   --button-success-text: #ffffff;
+ 
+   /* Botón de advertencia en dark */
+   --button-warning: #facc15;
+   --button-warning-hover: #eab308;
+   --button-warning-text: #111827;
+
+   /* Variables para íconos en modo oscuro */
+  --icon-secondary-bg: #ffffff;       /* Fondo blanco para íconos en modo dark */
+  --icon-secondary-hover-bg: #e5e5e5;   /* Fondo en hover en modo dark (ligeramente gris) */
+  --icon-secondary-text: #111111;       /* Color del texto o ícono en modo dark */
+   
+ 
+   /* Botón de error/destructivo en dark */
+   --button-danger: #ef4444;
+   --button-danger-hover: #dc2626;
+   --button-danger-text: #ffffff;
+  --foreground: #ededed;
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+  --secondary: #1f2937;
+  --secondary-foreground: #f3f4f6;
+  --muted: #1f2937;
+  --muted-foreground: #9ca3af;
+  --accent: #1f2937;
+  --accent-foreground: #f3f4f6;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: #374151;
+  --input: #374151;
+  --ring: #3b82f6;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+* {
+  border-color: var(--border);
+}
+
+@layer base {
+  /* Estilo del select */
+  select {
+    background-color: var(--background-secondary);
+    color: var(--foreground);
+    border-color: var(--border);
+    caret-color: var(--primary);
+  }
+
+  /* Estilo del select en modo dark */
+  [data-theme="dark"] select {
+    background-color: var(--background);
+    color: var(--foreground);
+    border-color: var(--border);
+    caret-color: var(--primary);
+  }
+
+  /* Estilo de las opciones del select */
+  select option {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  /* Estilo de las opciones del select en modo dark */
+  [data-theme="dark"] select option {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  /* Estilo del cursor y barra de escritura */
+  input,
+  textarea,
+  select {
+    caret-color: var(--primary); /* Color del cursor */
+  }
+
+  /* Estilo del cursor en modo dark */
+  [data-theme="dark"] input,
+  [data-theme="dark"] textarea,
+  [data-theme="dark"] select {
+    caret-color: var(--primary); /* Color del cursor en modo dark */
+  }
+
+  /* Estilo de la barra de escritura */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--background);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+  }
+
+  /* Estilo del autocompletado */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px var(--background-secondary) inset !important;
+    -webkit-text-fill-color: var(--foreground);
+    transition: background-color 5000s ease-in-out 0s;
+  }
+}
