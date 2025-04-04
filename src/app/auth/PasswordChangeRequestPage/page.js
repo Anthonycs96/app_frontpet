@@ -3,43 +3,71 @@
 import { useState, useEffect } from 'react';
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Heading } from "@/components/ui/Heading";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from 'react-toastify';
 import LoadingSpinner from "@/components/LoadingSpinner";
-import FormChangePassword from '@/components/form.change-password';
+import FormChangePassword from '@/app/auth/PasswordChangeRequestPage/form.change-password';
+import { cambiarPassword } from '@/api/endpoints/cambiar-password';
 
-export default function ForgotPasswordPage() {
+export default function PasswordChangeRequestPage() {
+    console.log("PasswordChangeRequestPage - Componente montado");
+
     const [isLoading, setIsLoading] = useState(true);
+    const [codigoRecuperacion, setCodigoRecuperacion] = useState('');
 
     const router = useRouter();
+    const searchParams = useSearchParams();
 
-    const navegar = () => {
-        router.push("/recuperar-password");
+    const navigate = () => {
+        router.push("/auth/login");
     };
 
-    // Verificar si el usuario ya está autenticado
     useEffect(() => {
+        console.log("PasswordChangeRequestPage - useEffect ejecutado");
         const token = localStorage.getItem("token");
         if (token) {
             router.push("/");
         } else {
-            setIsLoading(false);
+            const codigo = searchParams.get('codigo');
+            if (codigo) {
+                console.log("PasswordChangeRequestPage - Código encontrado en URL:", codigo);
+                setCodigoRecuperacion(codigo);
+                setIsLoading(false);
+            } else {
+                console.log("PasswordChangeRequestPage - No se encontró código en URL");
+                // Si no hay código en la URL, redirigir al usuario
+                router.push('/auth/ForgotPasswordPage');
+            }
         }
-    }, [router]);
+    }, [searchParams, router]);
 
     const handleSubmit = async (formData) => {
-        // Combinar el código del país con el número de teléfono
-        const fullPhoneNumber = `${formData.countryCode}${formData.phoneNumber}`;
-        console.log("Número completo:", fullPhoneNumber);
+        const paisCode = formData.countryCode;
+        const telefono = formData.phoneNumber;
+        const nuevaPassword = formData.password;
+        const respuestaSecreta = formData.respuestaSecreta;
+
+        console.log("Datos armados:", {
+            paisCode,
+            telefono,
+            nuevaPassword,
+            respuestaSecreta,
+            codigo: codigoRecuperacion,
+        });
 
         try {
-            const response = await recuperarPassword({
-                telefono: fullPhoneNumber
+            const response = await cambiarPassword({
+                paisCode,
+                telefono,
+                nuevaPassword,
+                respuestaSecreta,
+                codigo: codigoRecuperacion
             });
 
             console.log("Respuesta del servidor:", response);
             toast.success("Enlace de recuperación enviado");
-            // setTimeout(() => router.push('/login'), 3000);
+            router.push('/auth/login')
+            console.log("Respuesta del servidor 2:", response);
         } catch (error) {
             console.error("Error al recuperar la contraseña:", error);
             toast.error(error.message || "Error al recuperar la contraseña");
@@ -47,6 +75,7 @@ export default function ForgotPasswordPage() {
     };
 
     if (isLoading) {
+        console.log("PasswordChangeRequestPage - Cargando...");
         return (
             <div className="fixed inset-0 flex items-center justify-center bg-[var(--background)]">
                 <LoadingSpinner size={60} color="var(--primary)" />
@@ -68,17 +97,20 @@ export default function ForgotPasswordPage() {
                                 Cambiar contraseña
                             </Heading>
                             <p className="text-muted-foreground">
-                                Ingresa tu número de teléfono para restablecer tu contraseña
+                                Ingresa tu nueva contraseña usando el código: {codigoRecuperacion}
                             </p>
                         </CardHeader>
 
                         <CardContent>
-                            <FormChangePassword onSubmit={handleSubmit} />
+                            <FormChangePassword
+                                codigoRecuperacion={codigoRecuperacion}
+                                onSubmit={handleSubmit}
+                            />
                         </CardContent>
 
                         <CardFooter className="flex justify-center">
                             <button
-                                onClick={navegar}
+                                onClick={navigate}
                                 className="text-sm text-muted-foreground hover:text-primary transition-colors"
                             >
                                 ← Volver al recuperar contraseña

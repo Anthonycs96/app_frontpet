@@ -9,17 +9,23 @@ import { toast } from 'react-toastify';
 import { Frown } from 'lucide-react';
 import Button from "@/components/ui/button";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import FormForgotPassword from '@/components/form.forgot-password';
+import FormForgotPassword from '@/app/auth/ForgotPasswordPage/form.forgot-password';
 import { Modal, ModalContent, ModalTitle, ModalDescription, ModalTrigger } from '@/components/ui/Modal';
 
-
 export default function ForgotPasswordPage() {
+    const [codigorecuperacion, setCodigorecuperacion] = useState('');
+    const [mesajerecuperacion, setMesajerecuperacion] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const [countryCode, setCountryCode] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const router = useRouter();
     const [modalOpen, setModalOpen] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
 
-
+    console.log("codigorecuperacion:", codigorecuperacion);
+    console.log("mesajerecuperacion:", mesajerecuperacion);
     const navegar = () => {
         router.push("/");
     };
@@ -34,30 +40,24 @@ export default function ForgotPasswordPage() {
         }
     }, [router]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault(); // Evita que se recargue la página
-        console.log("Evento submit capturado, evitando recarga.");
+    const handleSubmit = async (formData) => {
+        setIsLoading(true);
+        setErrorMessage('');
 
         try {
-            const response = await onSubmit({
-                countryCode,
-                phoneNumber,
-                password,
-            });
+            const response = await recuperarPassword(formData);
+            setCodigorecuperacion(response.codigo);
+            setMesajerecuperacion(response.mensaje);
 
-            if (!response.ok) {
-                if (response.status === 401) {
-                    setErrorMessage("Credenciales incorrectas. Por favor, verifica tu usuario y contraseña.");
-                } else {
-                    setErrorMessage("Ocurrió un error inesperado. Inténtalo de nuevo más tarde.");
-                }
-            } else {
-                console.log("Login exitoso");
-                setErrorMessage(""); // Limpia el mensaje de error si el login es exitoso
-            }
+            // Redirigir con el código en la URL
+            const url = `/auth/PasswordChangeRequestPage?codigo=${encodeURIComponent(response.codigo)}`;
+            router.push(url);
+
         } catch (error) {
-            console.error("Error al intentar iniciar sesión:", error);
-            setErrorMessage("Ocurrió un error al procesar tu solicitud. Inténtalo de nuevo.");
+            console.error("Error al cambiar la contraseña:", error);
+            setErrorMessage('Ocurrió un error al procesar tu solicitud. Por favor, intenta de nuevo.');
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -74,7 +74,6 @@ export default function ForgotPasswordPage() {
             <div className="min-h-screen max-w-[480px] p-2 sm:p-6 md:p-8 transition-colors duration-300 flex items-center">
                 <Card className="w-screen h-screen sm:w-auto sm:h-auto p-6 sm:p-8 rounded-2xl shadow-lg">
                     <div className="space-y-6 flex flex-col justify-center h-full transition-all duration-500 ease-in-out">
-
                         <CardHeader className="text-center mb-6 sm:mb-8">
                             <Heading
                                 level="h2"
@@ -83,12 +82,21 @@ export default function ForgotPasswordPage() {
                                 Recupera tu contraseña
                             </Heading>
                             <p className="text-muted-foreground">
-                                Ingresa tu correo electrónico para restablecer tu contraseña
+                                Ingrese su número de teléfono para restablecer su contraseña
                             </p>
                         </CardHeader>
 
                         <CardContent>
-                            <FormForgotPassword onSubmit={handleSubmit} />
+                            <FormForgotPassword
+                                countryCode={countryCode}
+                                setCountryCode={setCountryCode}
+                                phoneNumber={phoneNumber}
+                                setPhoneNumber={setPhoneNumber}
+                                password={password}
+                                setPassword={setPassword}
+                                errorMessage={errorMessage}
+                                onSubmit={handleSubmit}
+                            />
                         </CardContent>
 
                         <CardFooter className="flex justify-center">
@@ -102,6 +110,7 @@ export default function ForgotPasswordPage() {
                     </div>
                 </Card>
             </div>
+
             <Modal open={modalOpen} onOpenChange={setModalOpen}>
                 <ModalContent>
                     <ModalTitle className="flex items-center justify-center gap-2 text-[var(--destructive)]">
@@ -122,7 +131,6 @@ export default function ForgotPasswordPage() {
                     </div>
                 </ModalContent>
             </Modal>
-
         </div>
     );
 }

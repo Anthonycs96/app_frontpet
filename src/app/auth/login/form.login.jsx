@@ -17,12 +17,12 @@ export default function FormLogin({ onSubmit, countries = [] }) {
 
   const router = useRouter();
 
-  const navegar = () => {
-    router.push("/recuperar-password");
+  const navigate = () => {
+    router.push("/auth/ForgotPasswordPage");
   };
 
-  const navegarregistrar = () => {
-    router.push("/registrar-Usuario");
+  const navigateRegister = () => {
+    router.push("/auth/Register");
   };
 
   const handleSubmit = async (e) => {
@@ -133,7 +133,7 @@ export default function FormLogin({ onSubmit, countries = [] }) {
         <div className="text-right mt-2 flex">
           <button
             type="button"
-            onClick={navegar}
+            onClick={navigate}
             className="text-sm text-[var(--muted-foreground)] hover:underline"
           >
             Olvidé mi contraseña, da click aquí!
@@ -156,7 +156,7 @@ export default function FormLogin({ onSubmit, countries = [] }) {
         </div>
         <Button
           type="button"
-          onClick={navegarregistrar}
+          onClick={navigateRegister}
           className="w-full bg-[var(--button-secondary)] text-[var(--foreground)] py-2.5 rounded-xl"
         >
           Crear cuenta nueva

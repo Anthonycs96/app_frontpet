@@ -5,7 +5,7 @@ export const obtenerUsuarioPorId = async (id) => {
         const token = localStorage.getItem("token");
         if (!token) throw new Error("No hay token");
 
-        const { data } = await API.get(`/api/usuarios/${id}`, {
+        const { data } = await API.get(`/api/usuarios/cliente/perfil/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

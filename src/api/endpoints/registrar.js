@@ -2,7 +2,7 @@ import API from '../config';
 
 export const registrar = async (credentials) => {
     try {
-        const { data } = await API.post('/api/usuarios/registrar', credentials);
+        const { data } = await API.post('/api/usuarios/cliente/registrar', credentials);
         return data;
     } catch (error) {
         console.log("💥 Backend error payload:", error.response?.data);

@@ -4,7 +4,9 @@ import Input from "@/components/ui/input";
 import Button from "@/components/ui/button";
 import { Eye, EyeOff } from 'lucide-react';
 
-export default function FormChangePassword({ onSubmit }) {
+export default function FormChangePassword({ onSubmit, codigoRecuperacion }) {
+    console.log("FormChangePassword - Código recibido:", codigoRecuperacion);
+
     const [phoneNumber, setPhoneNumber] = useState('');
     const [respuestaSecreta, setRespuestaSecreta] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -16,8 +18,17 @@ export default function FormChangePassword({ onSubmit }) {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-
     useEffect(() => {
+        console.log("FormChangePassword - Estado inicial:", {
+            countryCode,
+            phoneNumber,
+            respuestaSecreta,
+            password,
+            confirmPassword,
+            errorPassword,
+            isLoading
+        });
+
         const fetchCountries = async () => {
             try {
                 setIsLoading(true);
@@ -47,11 +58,18 @@ export default function FormChangePassword({ onSubmit }) {
         fetchCountries();
     }, []);
 
-
     const validarTelefono = numero => /^[9][0-9]{8}$/.test(numero);
 
     const handleSubmit = e => {
         e.preventDefault();
+        console.log("FormChangePassword - Datos antes de enviar:", {
+            countryCode,
+            phoneNumber,
+            respuestaSecreta,
+            password,
+            confirmPassword,
+            codigoRecuperacion
+        });
 
         if (!validarTelefono(phoneNumber)) {
             alert("Teléfono inválido. Debe empezar con 9 y tener 9 dígitos.");
@@ -64,7 +82,8 @@ export default function FormChangePassword({ onSubmit }) {
         }
 
         setErrorPassword("");
-        onSubmit({ countryCode, phoneNumber, respuestaSecreta, password });
+        onSubmit({ countryCode, phoneNumber, respuestaSecreta, password, codigoRecuperacion });
+
     };
 
     return (
@@ -147,10 +166,7 @@ export default function FormChangePassword({ onSubmit }) {
                     >
                         {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
-
-
                 </div>
-
 
                 <div className="relative">
                     <Label htmlFor="confirmPassword">Confirmar contraseña</Label>
@@ -174,7 +190,6 @@ export default function FormChangePassword({ onSubmit }) {
 
                     {errorPassword && <p className="mt-1 text-sm text-red-500">{errorPassword}</p>}
                 </div>
-
             </div>
 
             <Button

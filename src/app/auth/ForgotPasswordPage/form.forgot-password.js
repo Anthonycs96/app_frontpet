@@ -54,12 +54,15 @@ export default function FormForgotPassword({ onSubmit }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // if (!validarTelefono(phoneNumber)) {
-        //     alert("Teléfono inválido. Debe empezar con 9 y tener 9 dígitos.");
-        //     return;
-        // }
+        if (!validarTelefono(phoneNumber)) {
+            alert("Teléfono inválido. Debe empezar con 9 y tener 9 dígitos.");
+            return;
+        }
 
-        onSubmit({ countryCode, phoneNumber });
+        onSubmit({
+            paisCode: countryCode,
+            telefono: phoneNumber
+        });
     };
 
     return (

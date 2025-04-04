@@ -114,7 +114,7 @@ export default function NotFound() {
         </motion.p>
 
         <motion.div variants={animations.item}>
-          <Link href="/">
+          <Link href="/auth/login">
             <motion.button
               whileHover={!shouldReduceMotion ? { scale: 1.05 } : {}}
               whileTap={!shouldReduceMotion ? { scale: 0.95 } : {}}

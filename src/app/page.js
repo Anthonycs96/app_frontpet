@@ -1,5 +1,5 @@
 "use client";
-import Login from "@/app/login/page";
+import Login from "@/app/auth/login/page";
 // import LoginBasico from "@/app/login-basico/page";
 
 export default function Home() {

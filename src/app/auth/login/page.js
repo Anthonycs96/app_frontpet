@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Heading } from "@/components/ui/Heading";
-import FormLogin from "@/components/form.login";
+import FormLogin from "@/app/auth/login/form.login";
 import { useRouter } from "next/navigation";
 import { login } from "@/api/endpoints/auth";
 import { toast } from "react-toastify";
@@ -37,7 +37,7 @@ export default function Login() {
     // Redirigir si ya has iniciado sesión
     useEffect(() => {
         const token = localStorage.getItem("token");
-        if (token) return router.push("/dashboard/citas");
+        if (token) return router.push("/dashboard");
         setPageLoading(false);
     }, [router]);
 
@@ -70,10 +70,11 @@ export default function Login() {
         setError("");
         setSubmitLoading(true);
 
-        const telefono = `${formData.countryCode}${formData.phoneNumber}`;
+        const paisCode = formData.countryCode;
+        const telefono = formData.phoneNumber;
         const password = formData.password;
 
-        if (!telefono || !password) {
+        if (!paisCode || !telefono || !password) {
             setError("Ingresa teléfono y contraseña.");
             localStorage.setItem("loginError", "Ingresa teléfono y contraseña.");
             setSubmitLoading(false);
@@ -86,7 +87,7 @@ export default function Login() {
             localStorage.setItem("token", response.token);
             setError("");
             localStorage.removeItem("loginError");
-            router.push("/dashboard/citas");
+            router.push("/dashboard");
         } catch (err) {
             const msg = err.response?.data?.message || "Credenciales incorrectas.";
             setError(msg);

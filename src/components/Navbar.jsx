@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Button from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import jwt from "jsonwebtoken";
 
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -32,16 +31,24 @@ import {
   ArrowLeft,
   MoreHorizontal,
   X,
+  CalendarClock,
+  ClipboardList,
+  Syringe,
+  DollarSign,
+  BarChart2,
+  Stethoscope,
+  FileBarChart,
+  ShieldUser,
 } from "lucide-react";
 
-export default function Navbar({ isExpanded, setIsExpanded, usuario }) {
+export default function Navbar({ isExpanded, setIsExpanded, usuario, rol }) {
   const sidebarWidth = isExpanded ? "w-56" : "w-16";
   const pathname = usePathname();
   const router = useRouter();
   const [activeLink, setActiveLink] = useState("Inicio");
   const [showMore, setShowMore] = useState(false);
 
-  console.log("Usuario en navbar:", usuario);
+  //console.log("Rol en navbar:", rol);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -58,24 +65,77 @@ export default function Navbar({ isExpanded, setIsExpanded, usuario }) {
     setActiveLink("Perfil");
     router.push("/dashboard/perfil");
   };
+  //1 CLIENTE
   const clientNavLinks = [
-    { name: "Inicio", href: "home", icon: Home },
+    { name: "Inicio", href: "inicio", icon: Home }, // 🚨 Atención de emergencia // - Botón de llamada o WhatsApp  // - Instrucciones rápidas
+    // - Horarios de atención 24/7 (si aplica)
     { name: "Mi Mascota", href: "miMascota", icon: PawPrint }, // Detalles, vacunas, peso, etc.
     { name: "Mis Citas", href: "citas", icon: Calendar }, // Historial y próximas citas
     { name: "Servicios", href: "servicios", icon: Heart }, // Desparasitación, baño, etc.
     { name: "Emergencia", href: "emergencia", icon: AlertTriangle }, // Acceso rápido
-    { name: "Contacto", href: "contacto", icon: Mail }, // Teléfonos, WhatsApp, etc.
-    { name: "Colaboradores", href: "colaboradores", icon: Users }, // Colaboradores
+    //{ name: "Contacto", href: "contacto", icon: Mail }, // Teléfonos, WhatsApp, etc.
+    //{ name: "Colaboradores", href: "colaboradores", icon: Users }, // Colaboradores
   ];
-
+  //2 VETERINARIO
+  const vetNavLinks = [
+    { name: "Dashboard", href: "dashboard", icon: LayoutDashboard },
+    { name: "Agenda", href: "citas", icon: CalendarRange }, // citas asignadas
+    { name: "Pacientes", href: "pacientes", icon: PawPrint }, // historial clínico
+    { name: "Consultas", href: "consultas", icon: FileText }, // registrar atenciones
+    { name: "Recetas", href: "recetas", icon: ClipboardList }, // emitir y ver recetas
+    { name: "Vacunas", href: "vacunas", icon: Syringe }, // administrar vacunas
+    { name: "Perfil", href: "perfil", icon: User }, // info personal
+  ];
+  //3 staff / RECEPCIONISTA
   const staffNavLinks = [
-    { name: "Dashboard", href: "dashboard", icon: LayoutDashboard }, // Estadísticas, resumen
-    { name: "Citas", href: "citas", icon: CalendarRange }, // Ver y gestionar
-    { name: "Pacientes", href: "pacientes", icon: PawPrint }, // Todas las mascotas registradas
-    { name: "Propietarios", href: "clientes", icon: Users }, // Lista de clientes
-    { name: "Servicios", href: "servicios", icon: Wrench }, // Gestión de tipos de servicio
-    { name: "Reportes", href: "reportes", icon: FileText }, // Historial, atenciones, etc.
-    { name: "Configuración", href: "config", icon: Settings }, // Perfil, datos, horarios
+    { name: "Dashboard", href: "dashboard", icon: LayoutDashboard },
+    { name: "Citas", href: "citas", icon: CalendarRange }, // ver y gestionar citas
+    { name: "Mascotas", href: "pacientes", icon: PawPrint },
+    { name: "Clientes", href: "clientes", icon: Users },
+    { name: "Servicios", href: "servicios", icon: Wrench }, // gestionar tipos de servicios
+    { name: "Pagos", href: "pagos", icon: DollarSign },
+    { name: "Reportes", href: "reportes", icon: BarChart2 },
+    { name: "Perfil", href: "perfil", icon: User },
+  ];
+  //4 groomer /BAÑOS/asistente
+  const groomerNavLinks = [
+    { name: "Servicios Asignados", href: "asignados", icon: Heart },
+    { name: "Mi Agenda", href: "agenda", icon: Calendar },
+    { name: "Mascotas", href: "mascotas", icon: PawPrint },
+    { name: "Perfil", href: "perfil", icon: User },
+  ];
+  //5 ADMINISTRADOR
+  const adminNavLinks = [
+    { name: "Panel", href: "admin", icon: LayoutDashboard },
+    { name: "Usuarios", href: "usuarios", icon: Users },
+    { name: "Veterinarios", href: "veterinarios", icon: Stethoscope },
+    { name: "Clientes", href: "clientes", icon: User },
+    { name: "Servicios", href: "servicios", icon: Wrench },
+    { name: "Reportes", href: "reportes", icon: FileBarChart },
+    { name: "Horarios", href: "horarios", icon: CalendarClock },
+    { name: "Configuración", href: "config", icon: Settings },
+  ];
+  //6 SUPERADMINISTRADOR
+  const superadminNavLinks = [
+    { name: "Panel General", href: "superadmin", icon: LayoutDashboard },
+
+    // Gestión de veterinarias
+    {
+      name: "Veterinarias",
+      href: "superadmin/veterinarias",
+      icon: Stethoscope,
+    },
+
+    // Gestión de usuarios
+    { name: "Usuarios", href: "superadmin/usuarios", icon: Users },
+    { name: "Roles", href: "superadmin/roles", icon: ShieldUser },
+
+    // Planes / Suscripciones
+    { name: "Planes", href: "superadmin/planes", icon: FileBarChart },
+    { name: "Pagos", href: "superadmin/pagos", icon: DollarSign },
+
+    // Configuración general
+    { name: "Configuración", href: "superadmin/config", icon: Settings },
   ];
 
   // Función para cerrar sesión
@@ -98,38 +158,86 @@ export default function Navbar({ isExpanded, setIsExpanded, usuario }) {
     }
   };
 
-  const clientMobileNavLinks = [
-    { name: "Inicio", href: "#home", icon: Home },
-    { name: "Mi Mascota", href: "#miMascota", icon: PawPrint },
-    { name: "Citas", href: "#citas", icon: Calendar },
-    { name: "Servicios", href: "#servicios", icon: Heart },
-    { name: "Emergencia", href: "#emergencia", icon: AlertTriangle },
-    { name: "Contacto", href: "#contacto", icon: Mail },
+  //CLIENTE
+  const clientQuickAccessLinks = [
+    { name: "Inicio", href: "inicio", icon: Home },
+    { name: "Mi Mascota", href: "miMascota", icon: PawPrint },
+    { name: "Citas", href: "citas", icon: Calendar },
+  ];
+
+  const clientExtraLinks = [
+    { name: "Servicios", href: "servicios", icon: Heart },
+    { name: "Emergencia", href: "emergencia", icon: AlertTriangle },
+    //{ name: "Contacto", href: "#contacto", icon: Mail },
+    //{ name: "Colaboradores", href: "#colaboradores", icon: Users },
     { name: "Salir", href: "#logout", icon: LogOut, onClick: handleLogout },
   ];
 
-  const staffMobileNavLinks = [
+  //STAFF
+  const staffQuickAccessLinks = [
     { name: "Dashboard", href: "#dashboard", icon: LayoutDashboard },
     { name: "Citas", href: "#citas", icon: CalendarRange },
     { name: "Pacientes", href: "#pacientes", icon: PawPrint },
+  ];
+
+  const staffExtraLinks = [
     { name: "Clientes", href: "#clientes", icon: Users },
     { name: "Servicios", href: "#servicios", icon: Wrench },
     { name: "Reportes", href: "#reportes", icon: FileText },
     { name: "Config", href: "#config", icon: Settings },
     { name: "Salir", href: "#logout", icon: LogOut, onClick: handleLogout },
   ];
-  const quickAccessLinks = [
-    { name: "Inicio", href: "#home", icon: Home },
-    { name: "Mascota", href: "miMascota", icon: PawPrint },
-    { name: "Citas", href: "citas", icon: Calendar },
+
+  //VETERINARIO
+  const vetQuickAccessLinks = [
+    { name: "Dashboard", href: "#dashboard", icon: LayoutDashboard },
+    { name: "Agenda", href: "#citas", icon: CalendarRange },
+    { name: "Pacientes", href: "#pacientes", icon: PawPrint },
+  ];
+  const vetExtraLinks = [
+    { name: "Consultas", href: "#consultas", icon: FileText },
+    { name: "Recetas", href: "#recetas", icon: ClipboardList },
+    { name: "Vacunas", href: "#vacunas", icon: Syringe },
+    { name: "Salir", href: "#logout", icon: LogOut, onClick: handleLogout },
   ];
 
-  const extraLinks = [
-    { name: "Servicios", href: "#servicios", icon: Heart },
-    { name: "Emergencia", href: "#emergencia", icon: AlertTriangle },
-    { name: "Contacto", href: "#contacto", icon: Mail },
-    // { name: "Mi perfil", href: "perfil", icon: User, onClick: navegar },
-    { name: "Colaboradores", href: "colaboradores", icon: Users },
+  //GROOMER
+  const groomerQuickAccessLinks = [
+    { name: "Servicios", href: "#asignados", icon: Heart },
+    { name: "Agenda", href: "#agenda", icon: Calendar },
+    { name: "Mascotas", href: "#mascotas", icon: PawPrint },
+  ];
+  const groomerExtraLinks = [
+    { name: "Salir", href: "#logout", icon: LogOut, onClick: handleLogout },
+  ];
+
+  //ADMINISTRADOR
+  const adminQuickAccessLinks = [
+    { name: "Panel", href: "#admin", icon: LayoutDashboard },
+    { name: "Usuarios", href: "#usuarios", icon: Users },
+    { name: "Veterinarios", href: "#veterinarios", icon: Stethoscope },
+    { name: "Clientes", href: "#clientes", icon: User },
+    { name: "Servicios", href: "#servicios", icon: Wrench },
+    { name: "Reportes", href: "#reportes", icon: FileBarChart },
+    { name: "Config", href: "#config", icon: Settings },
+    { name: "Salir", href: "#logout", icon: LogOut, onClick: handleLogout },
+  ];
+  const adminExtraLinks = [
+    { name: "Salir", href: "#logout", icon: LogOut, onClick: handleLogout },
+  ];
+
+  // SUPERADMINISTRADOR
+  const superadminQuickAccessLinks = [
+    { name: "Panel", href: "#superadmin", icon: LayoutDashboard },
+    { name: "Veterinarias", href: "#veterinarias", icon: Stethoscope },
+    { name: "Usuarios", href: "#usuarios", icon: Users },
+  ];
+
+  const superadminExtraLinks = [
+    { name: "Roles", href: "#roles", icon: ShieldUser },
+    { name: "Planes", href: "#planes", icon: FileBarChart },
+    { name: "Pagos", href: "#pagos", icon: DollarSign },
+    { name: "Config", href: "#config", icon: Settings },
     { name: "Salir", href: "#logout", icon: LogOut, onClick: handleLogout },
   ];
 
@@ -158,6 +266,66 @@ export default function Navbar({ isExpanded, setIsExpanded, usuario }) {
     // }
   }, [router]);
 
+  const getWebQuickLinksByRole = (rol) => {
+    switch (rol) {
+      case "Cliente":
+        return clientNavLinks;
+      case "Staff":
+        return staffNavLinks;
+      case "Veterinario":
+        return vetNavLinks;
+      case "Groomer":
+        return groomerNavLinks;
+      case "Admin":
+        return adminNavLinks;
+      case "Superadmin":
+        return superadminNavLinks;
+      default:
+        return [];
+    }
+  };
+
+  const getMobileQuickLinksByRole = (rol) => {
+    switch (rol) {
+      case "Cliente":
+        return clientQuickAccessLinks;
+      case "Staff":
+        return staffQuickAccessLinks;
+      case "Veterinario":
+        return vetQuickAccessLinks;
+      case "Groomer":
+        return groomerQuickAccessLinks;
+      case "Admin":
+        return adminQuickAccessLinks;
+      case "Superadmin":
+        return superadminQuickAccessLinks;
+      default:
+        return [];
+    }
+  };
+
+  const getMobileExtraLinksByRole = (rol) => {
+    switch (rol) {
+      case "Cliente":
+        return clientExtraLinks;
+      case "Staff":
+        return staffExtraLinks;
+      case "Veterinario":
+        return vetExtraLinks;
+      case "Groomer":
+        return groomerExtraLinks;
+      case "Admin":
+        return adminExtraLinks;
+      case "Superadmin":
+        return superadminExtraLinks;
+      default:
+        return [];
+    }
+  };
+
+  const quickLinks = getMobileQuickLinksByRole(rol);
+  const extraMenuLinks = getMobileExtraLinksByRole(rol);
+  const webQuickLinks = getWebQuickLinksByRole(rol);
   return (
     <>
       {/* Escritorio / Tablet */}
@@ -211,7 +379,7 @@ export default function Navbar({ isExpanded, setIsExpanded, usuario }) {
               </h2>
             )} */}
             <ul className="space-y-2">
-              {clientNavLinks.map((item) => {
+              {webQuickLinks.map((item) => {
                 const isActive = pathname === item.href;
                 return (
                   <li key={item.href}>
@@ -283,7 +451,7 @@ export default function Navbar({ isExpanded, setIsExpanded, usuario }) {
           </button>
 
           {/* Botón Logout */}
-          <div className="mt-2">
+          <div className="mt-2 mb-2">
             {isExpanded ? (
               <Button
                 variant="ghost"
@@ -339,7 +507,7 @@ export default function Navbar({ isExpanded, setIsExpanded, usuario }) {
           </button>
 
           {/* 📚 Accesos rápidos (links) */}
-          {quickAccessLinks.map((link) => (
+          {quickLinks.map((link) => (
             <Link
               key={link.name}
               href={link.href}
@@ -371,7 +539,7 @@ export default function Navbar({ isExpanded, setIsExpanded, usuario }) {
         {/* 🔽 Popover o menú extra */}
         {showMore && (
           <div className="absolute bottom-16 left-1/2 -translate-x-1/2 bg-[var(--background-secondary)] border rounded-xl p-3 shadow-lg backdrop-blur-xl">
-            {extraLinks.map((link) => (
+            {extraMenuLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
