@@ -1,12 +1,10 @@
-import { MapPin, Mail, Smartphone, Camera, ArrowLeft } from "lucide-react";
+import { MapPin, Mail, Smartphone, Camera } from "lucide-react";
 import Avatar from "@/components/avatar";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
 export default function AvatarPerfil({ usuario }) {
   if (!usuario) return null;
-
-  console.log("🚀 usuario con estado:", usuario.usuario.nombre);
 
   const [isHovered, setIsHovered] = useState(false);
 
@@ -46,20 +44,20 @@ export default function AvatarPerfil({ usuario }) {
       {/* Información de Contacto */}
       <div className="px-4 pb-4 space-y-2">
         {[
-          {
-            icon: MapPin,
-            content: usuario.usuario.direccion,
-            href: `https://maps.google.com/?q=${usuario.usuario.direccion}`,
-          },
-          {
-            icon: Mail,
-            content: usuario.usuario.email,
-            href: `mailto:${usuario.usuario.email}`,
-          },
+          // {
+          //   icon: MapPin,
+          //   content: usuario.usuario.direccion,
+          //   href: `https://maps.google.com/?q=${usuario.usuario.direccion}`,
+          // },
+          // {
+          //   icon: Mail,
+          //   content: usuario.usuario.email,
+          //   href: `mailto:${usuario.usuario.email}`,
+          // },
           {
             icon: Smartphone,
-            content: `${usuario.usuario.countryCode} ${usuario.usuario.telefono}`,
-            href: `tel:${usuario.usuario.countryCode}${usuario.usuario.telefono}`,
+            content: `${usuario.usuario.paisCode} ${usuario.usuario.telefono}`,
+            // href: `tel:${usuario.usuario.paisCode}${usuario.usuario.telefono}`,
           },
         ].map((item, index) => (
           <motion.a

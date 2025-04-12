@@ -6,17 +6,14 @@ import { Heading } from "@/components/ui/Heading";
 import FormLogin from "@/app/auth/login/form.login";
 import { useRouter } from "next/navigation";
 import { login } from "@/api/endpoints/auth";
-import { toast } from "react-toastify";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { useCountryCodes } from "@/hooks/useCountryCodes";
 
 export default function Login() {
-    const [countries, setCountries] = useState([]);
+    const { countries, loading } = useCountryCodes();
     const [submitLoading, setSubmitLoading] = useState(false);
     const [pageLoading, setPageLoading] = useState(true);
-    const [mounted, setMounted] = useState(false);
-
     const router = useRouter();
-
     const [error, setError] = useState(() => {
         if (typeof window !== "undefined") {
             return localStorage.getItem("loginError") || "";
@@ -24,6 +21,7 @@ export default function Login() {
         return "";
     });
 
+    // Limpiar el error después de 30 segundos
     useEffect(() => {
         if (!error) return;
         const timer = setTimeout(() => {
@@ -33,69 +31,27 @@ export default function Login() {
         return () => clearTimeout(timer);
     }, [error]);
 
-
     // Redirigir si ya has iniciado sesión
     useEffect(() => {
         const token = localStorage.getItem("token");
-        if (token) return router.push("/dashboard");
-        setPageLoading(false);
-    }, [router]);
 
-    // Fetch country codes
-    useEffect(() => {
-        const fetchCountries = async () => {
-            setPageLoading(true);
-            try {
-                const resp = await fetch("https://restcountries.com/v3.1/all");
-                const data = await resp.json();
-                const list = data
-                    .map(c => ({
-                        name: c.name.common,
-                        code: c.idd.root + (c.idd.suffixes?.[0] ?? ""),
-                    }))
-                    .filter(c => c.code)
-                    .sort((a, b) => (a.code === "+51" ? -1 : b.code === "+51" ? 1 : a.name.localeCompare(b.name)));
-                setCountries(list);
-            } catch {
-                toast.error("Error cargando países");
-            }
-            finally {
-                setTimeout(() => setPageLoading(false), 500);
-            }
-        };
-        fetchCountries();
-    }, []);
-
-    const handleSubmit = async (formData) => {
-        setError("");
-        setSubmitLoading(true);
-
-        const paisCode = formData.countryCode;
-        const telefono = formData.phoneNumber;
-        const password = formData.password;
-
-        if (!paisCode || !telefono || !password) {
-            setError("Ingresa teléfono y contraseña.");
-            localStorage.setItem("loginError", "Ingresa teléfono y contraseña.");
-            setSubmitLoading(false);
+        if (!token) {
+            // Si no hay token, simplemente no hacer nada
+            setPageLoading(false); // No hacer nada y solo permitir que la página se cargue
             return;
         }
 
+        // Si el token está presente, validamos
         try {
-            const response = await login({ telefono, password });
-            console.log("Login exitoso:", response);
-            localStorage.setItem("token", response.token);
-            setError("");
-            localStorage.removeItem("loginError");
+            // Aquí puedes agregar tu lógica de validación de token si es necesario (por ejemplo, JWT Decode)
+            // O si el token ya es válido, redirigimos al dashboard
             router.push("/dashboard");
-        } catch (err) {
-            const msg = err.response?.data?.message || "Credenciales incorrectas.";
-            setError(msg);
-            localStorage.setItem("loginError", msg);
-        } finally {
-            setSubmitLoading(false);
+        } catch (error) {
+            console.error("Token inválido:", error);
+            setPageLoading(false); // No hacer nada si el token es inválido
         }
-    };
+    }, [router]);
+
 
 
     if (pageLoading) {
@@ -106,7 +62,6 @@ export default function Login() {
         );
     }
 
-
     const handleCloseError = () => {
         setError('');
         localStorage.removeItem("loginError");
@@ -115,12 +70,12 @@ export default function Login() {
     return (
         <div className="h-full w-full sm:flex sm:items-center sm:justify-center">
             <div className="min-h-screen max-w-[480px] p-0 sm:p-6 md:p-8 transition-colors duration-300 flex items-center">
-                <Card className="w-screen h-screen sm:w-auto sm:h-auto p-6 sm:p-8 rounded-2xl shadow-lg">
+                <Card className="w-screen h-screen sm:w-auto sm:h-auto p-6 sm:p-8 rounded-2xl shadow-lg bg-[var(--background)]">
                     <div className="space-y-6 flex flex-col justify-center h-full transition-all duration-500 ease-in-out">
                         <div className="text-center mb-2 sm:mb-2">
                             <Heading
                                 level="h2"
-                                className="text-3xl sm:text-3xl font-bold mb-2 sm:mb-3"
+                                className="text-3xl sm:text-3xl font-bold mb-2 sm:mb-3 text-[var(--foreground)]"
                             >
                                 Inicia sesión con cuenta VetListo+
                             </Heading>
@@ -129,19 +84,15 @@ export default function Login() {
                                     {error}
                                     <button
                                         type="button"
-                                        onClick={() => {
-                                            setError("");
-                                            localStorage.removeItem("loginError");
-                                        }}
+                                        onClick={handleCloseError}
                                         className="absolute top-1 right-2 text-xl font-bold leading-none"
                                     >
                                         ×
                                     </button>
                                 </div>
                             )}
-
                         </div>
-                        <FormLogin onSubmit={handleSubmit} countries={countries} disabled={submitLoading} />
+                        <FormLogin countries={countries} disabled={submitLoading} />
                     </div>
                 </Card>
             </div>

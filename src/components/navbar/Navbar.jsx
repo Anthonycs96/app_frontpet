@@ -67,12 +67,16 @@ export default function Navbar({ isExpanded, setIsExpanded, usuario, rol }) {
   };
   //1 CLIENTE
   const clientNavLinks = [
-    { name: "Inicio", href: "inicio", icon: Home }, // 🚨 Atención de emergencia // - Botón de llamada o WhatsApp  // - Instrucciones rápidas
+    { name: "Inicio", href: "/dashboard/cliente/inicio", icon: Home }, // 🚨 Atención de emergencia // - Botón de llamada o WhatsApp  // - Instrucciones rápidas
     // - Horarios de atención 24/7 (si aplica)
-    { name: "Mi Mascota", href: "miMascota", icon: PawPrint }, // Detalles, vacunas, peso, etc.
-    { name: "Mis Citas", href: "citas", icon: Calendar }, // Historial y próximas citas
-    { name: "Servicios", href: "servicios", icon: Heart }, // Desparasitación, baño, etc.
-    { name: "Emergencia", href: "emergencia", icon: AlertTriangle }, // Acceso rápido
+    {
+      name: "Mi Mascota",
+      href: "/dashboard/cliente/miMascota",
+      icon: PawPrint,
+    }, // Detalles, vacunas, peso, etc.
+    { name: "Mis Citas", href: "/dashboard/cliente/citas", icon: Calendar }, // Historial y próximas citas
+    // { name: "Servicios", href: "servicios", icon: Heart }, // Desparasitación, baño, etc.
+    // { name: "Emergencia", href: "emergencia", icon: AlertTriangle }, // Acceso rápido
     //{ name: "Contacto", href: "contacto", icon: Mail }, // Teléfonos, WhatsApp, etc.
     //{ name: "Colaboradores", href: "colaboradores", icon: Users }, // Colaboradores
   ];
@@ -160,9 +164,13 @@ export default function Navbar({ isExpanded, setIsExpanded, usuario, rol }) {
 
   //CLIENTE
   const clientQuickAccessLinks = [
-    { name: "Inicio", href: "inicio", icon: Home },
-    { name: "Mi Mascota", href: "miMascota", icon: PawPrint },
-    { name: "Citas", href: "citas", icon: Calendar },
+    { name: "Inicio", href: "/dashboard/cliente/inicio", icon: Home },
+    {
+      name: "Mi Mascota",
+      href: "/dashboard/cliente/miMascota",
+      icon: PawPrint,
+    },
+    { name: "Citas", href: "/dashboard/cliente/citas", icon: Calendar },
   ];
 
   const clientExtraLinks = [
@@ -335,17 +343,17 @@ export default function Navbar({ isExpanded, setIsExpanded, usuario, rol }) {
           fixed left-2 top-4 bottom-4
           ${sidebarWidth}
           bg-[var(--background-secondary)] text-[var(--foreground)]
-          rounded-xl border border-gray-200 dark:border-neutral-800
+          rounded-xl border-custom
           flex flex-col shadow-lg transition-all duration-300
           overflow-hidden
         `}
       >
         {/* Header del sidebar */}
-        <div className="flex items-center justify-between p-4 border-b">
+        <div className="flex items-center justify-between p-4 border-custom">
           {isExpanded && (
             <div className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground bg-[var(--icon-secondary-bg)]">
-                <Home className="h-4 w-4 text-[var(--icon-secondary-text)]" />
+                <Home className="h-4 w-4 text-[var(--icon-secondary-text)] " />
               </div>
               <h1 className="font-semibold text-2xl">VetListo+</h1>
             </div>
@@ -354,7 +362,7 @@ export default function Navbar({ isExpanded, setIsExpanded, usuario, rol }) {
             variant="ghost"
             size="icon"
             className={cn(
-              "!h-7 !w-7 !p-0 !m-0 rounded-full flex items-center justify-center bg-[var(--button-tertiary)] hover:bg-[var(--button-tertiary-hover)] shadow-none",
+              "!h-7 !w-7 !p-0 !m-0 rounded-full flex items-center justify-center navbar-cuarto shadow-none",
               !isExpanded && "mx-auto"
             )}
             onClick={() => setIsExpanded(!isExpanded)}
@@ -390,9 +398,7 @@ export default function Navbar({ isExpanded, setIsExpanded, usuario, rol }) {
                           className="
                             flex items-center w-full px-4 py-2 rounded-md
                             justify-start transition-colors duration-200
-                            shadow-none bg-[var(--navbar-cuarto)]
-                            text-[var(--navbar-cuarto-text)]
-                            hover:text-[var(--navbar-cuarto-text)]
+                            shadow-none navbar-cuarto
                           "
                         >
                           <item.icon className="mr-3 h-4 w-4" size={20} />
@@ -409,9 +415,7 @@ export default function Navbar({ isExpanded, setIsExpanded, usuario, rol }) {
                             flex items-center justify-center rounded-md
                             transition-colors duration-200
                             focus:outline-none focus:ring-0
-                            bg-[var(--navbar-cuarto)]
-                            text-[var(--navbar-cuarto-text)]
-                            hover:text-[var(--navbar-cuarto-text)]
+                            navbar-cuarto                     
                           "
                         >
                           <item.icon className="h-4 w-4" size={20} />
@@ -427,11 +431,11 @@ export default function Navbar({ isExpanded, setIsExpanded, usuario, rol }) {
         </div>
 
         {/* Footer y Logout al final */}
-        <div className="mt-auto border-t border-gray-200 dark:border-neutral-800 pt-4 px-2">
+        <div className="mt-auto border-custom pt-4 px-2">
           {/* Perfil del usuario */}
           <button
             onClick={navegar}
-            className="w-full flex items-center gap-3 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors"
+            className="w-full flex items-center gap-3 p-2 rounded-md navbar-cuarto transition-colors"
           >
             <img
               src={usuario.usuario.fotoPerfil}
@@ -442,9 +446,7 @@ export default function Navbar({ isExpanded, setIsExpanded, usuario, rol }) {
                 <p className="font-semibold text-sm text-gray-900 dark:text-white">
                   {usuario.usuario.nombre}
                 </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Ver perfil
-                </p>
+                <p className="text-xs text-gray-500 ">Ver perfil</p>
               </div>
             )}
             {!isExpanded && <span className="sr-only">Ir al perfil</span>}
@@ -457,10 +459,8 @@ export default function Navbar({ isExpanded, setIsExpanded, usuario, rol }) {
                 variant="ghost"
                 className="
           w-full flex items-center justify-start px-4 py-2
-          rounded-md bg-[var(--navbar-cuarto)]
-          text-[var(--navbar-cuarto-text)]
-          hover:bg-[var(--navbar-cuarto-hover)]
-          hover:text-[var(--navbar-cuarto-text)]
+          rounded-md navbar-cuarto
+          transition-colors duration-200 
         "
                 onClick={handleLogout}
               >
@@ -473,9 +473,7 @@ export default function Navbar({ isExpanded, setIsExpanded, usuario, rol }) {
                 size="icon"
                 className="
           !h-10 !w-10 p-0 m-0 flex items-center justify-center rounded-md
-          bg-[var(--navbar-cuarto)]
-          text-[var(--navbar-cuarto-text)]
-          hover:bg-[var(--navbar-cuarto-hover)]
+      
           transition-colors
         "
                 onClick={handleLogout}
@@ -495,10 +493,8 @@ export default function Navbar({ isExpanded, setIsExpanded, usuario, rol }) {
           <button
             onClick={navegar}
             className={`flex flex-col items-center p-2 rounded-xl transition-all w-13 h-13 ${
-              activeLink === "Perfil"
-                ? "bg-[var(--button-hover)] text-[var(--navbar-cuarto-text)]"
-                : "text-[var(--navbar-cuarto-text)]"
-            } hover:text-[var(--navbar-cuarto-text)]`}
+              activeLink === "Perfil" ? "navbar-cuarto" : "navbar-cuarto"
+            } navbar-cuarto`}
           >
             <span className="text-sm font-semibold truncate max-w-[3.5rem]">
               {usuario.usuario.nombre}
@@ -516,10 +512,8 @@ export default function Navbar({ isExpanded, setIsExpanded, usuario, rol }) {
                 if (link.onClick) link.onClick();
               }}
               className={`flex flex-col items-center p-2 rounded-xl transition-all group w-13 h-13 ${
-                activeLink === link.name
-                  ? "bg-[var(--button-hover)] text-[var(--navbar-cuarto-text)]"
-                  : "text-[var(--navbar-cuarto-text)]"
-              } hover:text-[var(--navbar-cuarto-text)]`}
+                activeLink === link.name ? "navbar-cuarto" : "navbar-cuarto"
+              } navbar-cuarto`}
             >
               <link.icon size={20} />
               <span className="text-xs mt-1">{link.name}</span>
@@ -529,7 +523,7 @@ export default function Navbar({ isExpanded, setIsExpanded, usuario, rol }) {
           {/* ➕ Botón "Más" */}
           <button
             onClick={() => setShowMore(!showMore)}
-            className="flex flex-col items-center p-2 rounded-xl transition-all text-[var(--navbar-cuarto-text)] w-13 h-13 hover:text-blue-500"
+            className="flex flex-col items-center p-2 rounded-xl transition-all navbar-cuarto w-13 h-13 hover:text-blue-500"
           >
             {showMore ? <X size={20} /> : <MoreHorizontal size={20} />}
             <span className="text-xs mt-1">{showMore ? "Cerrar" : "Más"}</span>

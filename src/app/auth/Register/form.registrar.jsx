@@ -27,11 +27,13 @@ import {
 } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 
-export default function FormRegistrarUsuarioEscritorio({ onSubmit }) {
+export default function FormRegistrarUsuarioEscritorio({
+  onSubmit,
+  countries,
+}) {
   const router = useRouter();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [errorPassword, setErrorPassword] = useState("");
-  const [countries, setCountries] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -112,37 +114,6 @@ export default function FormRegistrarUsuarioEscritorio({ onSubmit }) {
   };
 
   useEffect(() => {
-    const fetchCountries = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch("https://restcountries.com/v3.1/all");
-        const data = await response.json();
-        const countryList = data
-          .map((country) => ({
-            name: country.name.common,
-            code:
-              country.idd.root +
-              (country.idd.suffixes ? country.idd.suffixes[0] : ""),
-          }))
-          .filter((country) => country.code)
-          .sort((a, b) => {
-            if (a.code === "+51") return -1; // Peru first
-            if (b.code === "+51") return 1;
-            return a.name.localeCompare(b.name);
-          });
-
-        setCountries(countryList);
-      } catch (error) {
-        console.error("Error fetching countries:", error);
-      } finally {
-        setTimeout(() => setIsLoading(false), 500);
-      }
-    };
-
-    fetchCountries();
-  }, []);
-
-  useEffect(() => {
     setFormData((prev) => ({ ...prev, password }));
   }, [password]);
 
@@ -194,193 +165,196 @@ export default function FormRegistrarUsuarioEscritorio({ onSubmit }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className=" mx-autorounded-2xl shadow-md p-0 sm:p-0 space-y-4"
+      className="rounded-2xl shadow-md p-0 md:p-2 space-y-4"
     >
-      <Card className="background[var(--background)] shadow-none">
-        <CardHeader className="px-2 pb-2">
-          <h2 className="text-2xl font-semibold text-primary">
-            Información Personal
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Ingresa tus datos personales para crear tu cuenta
-          </p>
-        </CardHeader>
-        <CardContent className="p-2 pt-4">
-          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-5">
-            <div className="space-y-2">
-              <Label htmlFor="nombre" className="flex items-center gap-2">
-                <User size={16} className="text-primary" />
-                Nombre completo
-              </Label>
-              <Input
-                id="nombre"
-                name="nombre"
-                type="text"
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
-                required
-                className="w-full pl-4 pr-3 py-2.5 rounded-xl border background[var(--border)]"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="direccion" className="flex items-center gap-2">
-                <MapPin size={16} className="text-primary" />
-                Dirección
-              </Label>
-              <Input
-                id="direccion"
-                name="direccion"
-                type="text"
-                value={direccion}
-                onChange={(e) => setDireccion(e.target.value)}
-                required
-                className="w-full pl-4 pr-3 py-2.5 rounded-xl border background[var(--border)]"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="countryCode" className="flex items-center gap-2">
-                <MapPin size={16} className="text-primary" />
-                País
-              </Label>
-              <div className="relative">
-                {isLoading && (
-                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                    <div className="animate-spin h-4 w-4 background2 backgroundprimary backgroundt-transparent rounded-full"></div>
-                  </div>
-                )}
-                <select
-                  id="countryCode"
-                  value={countryCode}
-                  onChange={(e) => setCountryCode(e.target.value)}
-                  className="w-full h-10 px-3 rounded-md border background[var(--border)] bg-background text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-primary focus:backgroundtransparent"
-                >
-                  {isLoading ? (
-                    <option>Cargando países...</option>
-                  ) : (
-                    countries.map((country) => (
-                      <option
-                        key={`${country.code}-${country.name}`}
-                        value={country.code}
-                      >
-                        {country.name} ({country.code})
-                      </option>
-                    ))
-                  )}
-                </select>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="phoneNumber" className="flex items-center gap-2">
-                <Smartphone size={16} className="text-primary" />
-                Teléfono
-              </Label>
-              <div className="flex gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+        <Card className="shadow-none p-2">
+          <CardHeader className="px-2 pb-2">
+            <h2 className="text-2xl font-semibold text-primary">
+              Información Personal
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Ingresa tus datos personales para crear tu cuenta
+            </p>
+          </CardHeader>
+          <CardContent className="p-2 pt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="nombre" className="flex items-center gap-2">
+                  <User size={16} className="text-primary" />
+                  Nombre completo
+                </Label>
                 <Input
-                  id="phoneNumber"
-                  value={phoneNumber}
-                  onChange={(e) =>
-                    setPhoneNumber(e.target.value.replace(/\D/g, ""))
-                  }
+                  id="nombre"
+                  name="nombre"
                   type="text"
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
                   required
-                  className="w-full pl-4 pr-3 py-2.5 rounded-xl border"
-                  placeholder="987654321"
+                  className="w-full pl-4 pr-3 py-2.5 rounded-xl border background[var(--border)]"
                 />
               </div>
-              {phoneNumber && !validarTelefono(phoneNumber) && (
-                <p className="text-xs text-red-500 mt-1">
-                  Debe empezar con 9 y tener 9 dígitos
-                </p>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
 
-      <div className="h-[1px] w-full bg-[var(--border)] my-6"></div>
-
-      <Card className="backgroundnone shadow-none">
-        <CardHeader className="px-2 pb-2">
-          <h2 className="text-2xl font-semibold text-primary">
-            Datos de Identificación
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Información para verificar tu identidad
-          </p>
-        </CardHeader>
-        <CardContent className="p-2 pt-4">
-          <div className="grid sm:grid-cols-3 gap-5">
-            <div className="space-y-2">
-              <Label
-                htmlFor="documentoIdentidad"
-                className="flex items-center gap-2"
-              >
-                <CreditCard size={16} className="text-primary" />
-                Documento de identidad
-              </Label>
-              <Input
-                id="documentoIdentidad"
-                name="documentoIdentidad"
-                type="number"
-                value={documentoIdentidad}
-                onChange={(e) => setDocumentoIdentidad(e.target.value)}
-                required
-                className="w-full pl-4 pr-3 py-2.5 rounded-xl border background[var(--border)]"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label
-                htmlFor="fechaNacimiento"
-                className="flex items-center gap-2"
-              >
-                <Calendar
-                  size={16}
-                  className="text-[var(--icon-secondary-bg)]"
+              <div className="space-y-2">
+                <Label htmlFor="direccion" className="flex items-center gap-2">
+                  <MapPin size={16} className="text-primary" />
+                  Dirección
+                </Label>
+                <Input
+                  id="direccion"
+                  name="direccion"
+                  type="text"
+                  value={direccion}
+                  onChange={(e) => setDireccion(e.target.value)}
+                  required
+                  className="w-full pl-4 pr-3 py-2.5 rounded-xl border background[var(--border)]"
                 />
-                Fecha de nacimiento
-              </Label>
-              <Input
-                id="fechaNacimiento"
-                name="fechaNacimiento"
-                type="date"
-                value={fechaNacimiento}
-                onChange={(e) => setFechaNacimiento(e.target.value)}
-                required
-                className="
+              </div>
+
+              <div className="space-y-2">
+                <Label
+                  htmlFor="countryCode"
+                  className="flex items-center gap-2"
+                >
+                  <MapPin size={16} className="text-primary" />
+                  País
+                </Label>
+                <div className="relative">
+                  {isLoading && (
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      <div className="animate-spin h-4 w-4 background2 backgroundprimary backgroundt-transparent rounded-full"></div>
+                    </div>
+                  )}
+                  <select
+                    id="countryCode"
+                    value={countryCode}
+                    onChange={(e) => setCountryCode(e.target.value)}
+                    className="w-full h-10 px-3 rounded-md border background[var(--border)] bg-background text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-primary focus:backgroundtransparent"
+                  >
+                    {isLoading ? (
+                      <option>Cargando países...</option>
+                    ) : (
+                      countries.map((country) => (
+                        <option
+                          key={`${country.code}-${country.name}`}
+                          value={country.code}
+                        >
+                          {country.name} ({country.code})
+                        </option>
+                      ))
+                    )}
+                  </select>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label
+                  htmlFor="phoneNumber"
+                  className="flex items-center gap-2"
+                >
+                  <Smartphone size={16} className="text-primary" />
+                  Teléfono
+                </Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="phoneNumber"
+                    value={phoneNumber}
+                    onChange={(e) =>
+                      setPhoneNumber(e.target.value.replace(/\D/g, ""))
+                    }
+                    type="text"
+                    required
+                    className="w-full pl-4 pr-3 py-2.5 rounded-xl border"
+                    placeholder="987654321"
+                  />
+                </div>
+                {phoneNumber && !validarTelefono(phoneNumber) && (
+                  <p className="text-xs text-red-500 mt-1">
+                    Debe empezar con 9 y tener 9 dígitos
+                  </p>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="backgroundnone shadow-none">
+          <CardHeader className="px-2 pb-2">
+            <h2 className="text-2xl font-semibold text-primary">
+              Datos de Identificación
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Información para verificar tu identidad
+            </p>
+          </CardHeader>
+          <CardContent className="p-2 pt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label
+                  htmlFor="documentoIdentidad"
+                  className="flex items-center gap-2"
+                >
+                  <CreditCard size={16} className="text-primary" />
+                  Documento de identidad
+                </Label>
+                <Input
+                  id="documentoIdentidad"
+                  name="documentoIdentidad"
+                  type="number"
+                  value={documentoIdentidad}
+                  onChange={(e) => setDocumentoIdentidad(e.target.value)}
+                  required
+                  className="w-full pl-4 pr-3 py-2.5 rounded-xl border background[var(--border)]"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label
+                  htmlFor="fechaNacimiento"
+                  className="flex items-center gap-2"
+                >
+                  <Calendar
+                    size={16}
+                    className="text-[var(--icon-secondary-bg)]"
+                  />
+                  Fecha de nacimiento
+                </Label>
+                <Input
+                  id="fechaNacimiento"
+                  name="fechaNacimiento"
+                  type="date"
+                  value={fechaNacimiento}
+                  onChange={(e) => setFechaNacimiento(e.target.value)}
+                  required
+                  className="
     w-full pl-4 pr-3 py-2.5 rounded-xl border border-[var(--border)]
     text-[var(--icon-secondary-bg)]
     [&::-webkit-calendar-picker-indicator]:cursor-pointer
     [&::-webkit-calendar-picker-indicator]:invert-0
     dark:[&::-webkit-calendar-picker-indicator]:invert
   "
-              />
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="email" className="flex items-center gap-2">
+                  <Mail size={16} className="text-primary" />
+                  Correo electrónico
+                </Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full pl-4 pr-3 py-2.5 rounded-xl border background[var(--border)]"
+                />
+              </div>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="email" className="flex items-center gap-2">
-                <Mail size={16} className="text-primary" />
-                Correo electrónico
-              </Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full pl-4 pr-3 py-2.5 rounded-xl border background[var(--border)]"
-              />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <div className="h-[1px] w-full bg-[var(--border)] my-6"></div>
-
+          </CardContent>
+        </Card>
+      </div>
       <Card className="backgroundnone shadow-none">
         <CardHeader className="px-2 pb-2">
           <h2 className="text-2xl font-semibold text-primary">Seguridad</h2>
@@ -532,10 +506,10 @@ export default function FormRegistrarUsuarioEscritorio({ onSubmit }) {
         </CardContent>
       </Card>
 
-      <CardFooter className="flex flex-col space-y-4 px-2 pt-4">
+      <CardFooter className="flex flex-row items-center justify-between gap-4 px-2 pt-4">
         <Button
           type="submit"
-          className="w-full bg-primary text-primary-foreground hover:bg-[var(--button-hover)] text-base font-medium transition-colors"
+          className=" bg-[var(--button)] text-[var(--text-foreground)] hover:bg-[var(--button-hover)] text-base font-medium transition-colors"
         >
           Registrarse
         </Button>

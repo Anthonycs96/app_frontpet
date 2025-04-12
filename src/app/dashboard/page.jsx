@@ -15,10 +15,10 @@ export default function DashboardPage({ usuario }) {
     const token = localStorage.getItem("token");
 
     // Si no hay token, redirigimos al usuario al login
-    if (!token) {
-      router.push("/auth/login");
-      return;
-    }
+    // if (!token) {
+    //   router.push("/auth/login");
+    //   return;
+    // }
 
     try {
       // Decodificamos el token JWT para obtener la información del usuario

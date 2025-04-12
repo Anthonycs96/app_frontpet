@@ -4,14 +4,16 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Heading } from "@/components/ui/Heading";
-import FormRegistrarUsuarioEscritorio from "@/components/form.registrar";
+import FormRegistrarUsuarioEscritorio from "@/app/auth/Register/form.registrar";
 import { registrar } from "@/api/endpoints/registrar";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { PawPrint } from "lucide-react";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { useCountryCodes } from "@/hooks/useCountryCodes";
 
 export default function Register() {
+    const { countries, loading } = useCountryCodes();
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
@@ -108,6 +110,7 @@ export default function Register() {
                                         exit={{ opacity: 0 }}
                                     >
                                         <FormRegistrarUsuarioEscritorio
+                                            countries={countries}
                                             onSubmit={handleSubmit}
                                             isLoading={isLoading}
                                         />

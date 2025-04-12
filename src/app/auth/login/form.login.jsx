@@ -1,13 +1,12 @@
-"use client";
-
 import { useState } from "react";
 import Label from "@/components/ui/label";
 import Input from "@/components/ui/input";
 import Button from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { login } from "@/api/endpoints/auth"; // Asumiendo que este método hace la solicitud al backend
 
-export default function FormLogin({ onSubmit, countries = [] }) {
+export default function FormLogin({ countries = [] }) {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [countryCode, setCountryCode] = useState("+51"); // Default a Perú
@@ -27,32 +26,25 @@ export default function FormLogin({ onSubmit, countries = [] }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Evita que se recargue la página
-    setError("");
-    setIsSubmitting(true);
+    setError(""); // Limpiar cualquier error previo
+    setIsSubmitting(true); // Activar el estado de carga
     try {
-      console.log("Submit capturado en FormLogin");
-      const response = await onSubmit({
-        countryCode,
-        phoneNumber,
-        password,
-      });
+      // Asegúrate de enviar los datos correctos al backend
+      const response = await login({ telefono: phoneNumber, password });
 
-      // if (!response.ok) {
-      //   if (response.status === 401) {
-      //     alert(
-      //       "Credenciales incorrectas. Por favor, verifica tu usuario y contraseña."
-      //     );
-      //   } else {
-      //     alert("Ocurrió un error inesperado. Inténtalo de nuevo más tarde.");
-      //   }
-      // } else {
-      //   console.log("Login exitoso");
-      // }
+      console.log("Login response:", response);
+
+      if (response.token) {
+        // Si el login es exitoso, guarda el token y redirige al dashboard
+        localStorage.setItem("token", response.token);
+        router.push("/dashboard"); // Redirigir al dashboard
+      }
     } catch (error) {
       console.error("Error al intentar iniciar sesión:", error);
-      alert("Ocurrió un error al procesar tu solicitud. Inténtalo de nuevo.");
+      // Mostrar el error real del backend
+      setError(error.message); // Mostrar el mensaje específico del backend
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false); // Detener el estado de carga
     }
   };
 
@@ -78,6 +70,7 @@ export default function FormLogin({ onSubmit, countries = [] }) {
             ))}
           </select>
         </div>
+
         {/* Número de Teléfono */}
         <div>
           <Label htmlFor="phoneNumber">Número de Teléfono</Label>
@@ -96,6 +89,7 @@ export default function FormLogin({ onSubmit, countries = [] }) {
               name="phoneNumber"
               value={phoneNumber}
               onChange={(e) => {
+                // Asegurarse de que solo se ingresen números
                 const value = e.target.value.replace(/\D/g, "");
                 setPhoneNumber(value);
               }}
@@ -106,6 +100,7 @@ export default function FormLogin({ onSubmit, countries = [] }) {
             />
           </div>
         </div>
+
         {/* Contraseña */}
         <div>
           <div className="relative">
@@ -129,6 +124,7 @@ export default function FormLogin({ onSubmit, countries = [] }) {
             </button>
           </div>
         </div>
+
         {/* Enlace para "Olvidé mi contraseña" */}
         <div className="text-right mt-2 flex">
           <button
@@ -139,13 +135,23 @@ export default function FormLogin({ onSubmit, countries = [] }) {
             Olvidé mi contraseña, da click aquí!
           </button>
         </div>
+
+        {/* Mostrar error */}
+        {error && (
+          <div className="text-red-500 text-sm mt-4">
+            <p>{error}</p>
+          </div>
+        )}
+
         {/* Botón de Envío */}
         <Button
           type="submit"
           className="w-full bg-[var(--primary)] text-[var(--background)] py-2.5 rounded-xl"
+          disabled={isSubmitting}
         >
-          Iniciar Sesión
+          {isSubmitting ? "Cargando..." : "Iniciar Sesión"}
         </Button>
+
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-200"></div>
@@ -154,6 +160,7 @@ export default function FormLogin({ onSubmit, countries = [] }) {
             <span className="px-2 text-[var(--muted-foreground)]">o</span>
           </div>
         </div>
+
         <Button
           type="button"
           onClick={navigateRegister}

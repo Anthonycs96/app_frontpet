@@ -1,127 +1,155 @@
 @import "tailwindcss";
 :root {
+  /* Fondos principales */
   --fondo-degradado: linear-gradient(to right, #3b82f6, #8b5cf6, #7c3aed);
 
-  --background: #f1f5f9;
-  --background-secondary: #ffffff;
+  /* Fondos principales */
+  --background: #f8fafc;                 /* fondo general: gris muy claro */
+  --background-secondary: #ffffff;       /* tarjetas, secciones internas */
+  --background-tertiary: #f1f5f9;        /* navbar, inputs, hover suaves */
+  --background-elevated: #e2e8f0;        /* para componentes destacados o info resaltada */
+
+
+  /* Textos */
+  --foreground: #0f172a;
+  --text-muted: #64748b;
+  --text-primary: #2563eb;
+
+  --border-color: #e2e8f0;
+  
   /* Botón primario */
-  --button: #3b82f6;
-  --button-hover: #2563eb;
+  --button: #2563eb;
+  --button-hover: #1d4ed8;
   --button-text: #ffffff;
 
   /* Botón secundario */
-  --button-secondary: #ffffff;
-  --button-secondary-hover: #d1d5db;
-  --button-secondary-text: #1f2937;
+  --button-secondary: #f1f5f9;
+  --button-secondary-hover: #e2e8f0;
+  --button-secondary-text: #1e293b;
 
   /* Botón terciario */
   --button-tertiary: #ffffff;
-  --button-tertiary-hover: #f3f4f6;
-  --button-tertiary-text: #111111;
+  --button-tertiary-hover: #f8fafc;
+  --button-tertiary-text: #0f172a;
 
-    /* Botón cuarto */
+  /* Componentes de navegación */
   --navbar-cuarto: #ffffff;
-  --navbar-cuarto-hover: #f3f4f6;
-  --navbar-cuarto-text: #111111;
-  --navbar-cuarto-text-hover: #111111;
+  --navbar-cuarto-hover: #2563eb;
+  --navbar-cuarto-text: #0f172a;
+  --navbar-cuarto-text-hover: #ffffff;
+  
+  --card-action-bg: var(--background-tertiary);         /* fondo sutil */
+  --card-action-text: var(--primary);                   /* color principal */
+  --card-action-hover: var(--background-elevated);      /* para dar efecto en hover */
 
-  /* Botón de éxito */
+  /* Estados y acciones */
   --button-success: #10b981;
   --button-success-hover: #059669;
   --button-success-text: #ffffff;
-
-  /* Botón de advertencia */
+  
   --button-warning: #f59e0b;
   --button-warning-hover: #d97706;
   --button-warning-text: #ffffff;
-
-  /* Variables para íconos en modo claro */
-  --icon-secondary-bg: #111111;       /* Fondo oscuro para íconos en modo claro */
-  --icon-secondary-hover-bg: #5d6168; /* Fondo en hover en modo claro */
-  --icon-secondary-text: #f3f4f6;       /* Color del texto o ícono */
-
-  /* Botón de error/destructivo */
+  
   --button-danger: #ef4444;
   --button-danger-hover: #dc2626;
   --button-danger-text: #ffffff;
-  --foreground: #171717;
-  --primary: #2563eb;
-  --primary-foreground: #ffffff;
-  --secondary: #f3f4f6;
-  --secondary-foreground: #111827;
-  --muted: #f3f4f6;
-  --muted-foreground: #6b7280;
-  --accent: #f3f4f6;
-  --accent-foreground: #111827;
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
-  --border: #e5e7eb;
-  --input: #e5e7eb;
+
+  /* Iconos */
+  --icon-secondary-bg: #0f172a;
+  --icon-secondary-hover-bg: #334155;
+  --icon-secondary-text: #f8fafc;
+
+  /* Elementos de interfaz */
+  --border: #e2e8f0;
+  --input: #e2e8f0;
   --ring: #2563eb;
   --radius: 0.5rem;
+  
+  /* Variables adicionales */
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
 }
 
 .dark {
+  /* Fondos principales */
+  --fondo-degradado: linear-gradient(to right, #1e3a8a, #5b21b6, #4c1d95);
+  /* Fondos principales */
+  --background: #1e1e1e;                 /* fondo base del body */
+  --background-secondary: #111111;       /* tarjetas, secciones principales */
+  --background-tertiary: #1a1a1d;        /* navbar, botones secundarios */
+  --background-elevated: #2c2c2e;        /* para resaltar tarjetas o info importante */
 
-  --fondo-degradado: linear-gradient(to right, #1e40af, #6d28d9, #4c1d95);
+  /* Textos */
+  --foreground: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-primary: #60a5fa;
 
-  --background: #1e1e1e;
-  --background-secondary: #111111;
-   /* Botón primario en dark */
-   --button: #3b82f6;
-   --button-hover: #60a5fa;
-   --button-text: #ffffff;
- 
-   /* Botón secundario en dark */
-   --button-secondary: #5d6168;
-   --button-secondary-hover: #111827;
-   --button-secondary-text: #f3f4f6;
- 
-   /* Botón terciario en dark */
-   --button-tertiary: #242425;
-   --button-tertiary-hover: #303031;
-   --button-tertiary-text: #f3f4f6;
+  --border-color: #1e1e1e;
 
-      /* Botón cuarto en dark */
-    --navbar-cuarto: #242425;
-    --navbar-cuarto-hover: #303031;
-    --navbar-cuarto-text: #f3f4f6;
-    --navbar-cuarto-text-hover: #111111;
- 
-   /* Botón de éxito en dark */
-   --button-success: #22c55e;
-   --button-success-hover: #16a34a;
-   --button-success-text: #ffffff;
- 
-   /* Botón de advertencia en dark */
-   --button-warning: #facc15;
-   --button-warning-hover: #eab308;
-   --button-warning-text: #111827;
+  /* Botón primario */
+  --button: #3b82f6;
+  --button-hover: #60a5fa;
+  --button-text: #ffffff;
 
-   /* Variables para íconos en modo oscuro */
-  --icon-secondary-bg: #ffffff;       /* Fondo blanco para íconos en modo dark */
-  --icon-secondary-hover-bg: #e5e5e5;   /* Fondo en hover en modo dark (ligeramente gris) */
-  --icon-secondary-text: #111111;       /* Color del texto o ícono en modo dark */
-   
- 
-   /* Botón de error/destructivo en dark */
-   --button-danger: #ef4444;
-   --button-danger-hover: #dc2626;
-   --button-danger-text: #ffffff;
-  --foreground: #ededed;
+  /* Botón secundario */
+  --button-secondary: #334155;
+  --button-secondary-hover: #475569;
+  --button-secondary-text: #f8fafc;
+
+  /* Botón terciario */
+  --button-tertiary: #111111;
+  --button-tertiary-hover: #334155;
+  --button-tertiary-text: #f8fafc;
+
+/* Navegación - Modo Oscuro Alternativa Elegante */
+--navbar-cuarto: #222121;             /* fondo tipo Material Dark (Google) */
+--navbar-cuarto-hover: #60a5fa;       /* hover con contraste sutil */
+--navbar-cuarto-text: #e0e0e0;        /* texto claro (no blanco puro, más descansado a la vista) */
+--navbar-cuarto-text-hover: #ffffff;  /* azul celeste moderno (acento tipo Google/Apple) */
+
+--card-action-bg: var(--background-tertiary);         /* en dark, ya está oscura */
+--card-action-text: var(--primary);                   /* azul claro en dark */
+--card-action-hover: var(--background-elevated);      /* para destacar un poco más */
+
+  /* Estados y acciones */
+  --button-success: #22c55e;
+  --button-success-hover: #16a34a;
+  --button-success-text: #ffffff;
+  
+  --button-warning: #fbbf24;
+  --button-warning-hover: #f59e0b;
+  --button-warning-text: #1e293b;
+  
+  --button-danger: #ef4444;
+  --button-danger-hover: #dc2626;
+  --button-danger-text: #ffffff;
+
+  /* Iconos */
+  --icon-secondary-bg: #f8fafc;
+  --icon-secondary-hover-bg: #e2e8f0;
+  --icon-secondary-text: #0f172a;
+
+  /* Elementos de interfaz */
+  --border: #334155;
+  --input: #334155;
+  --ring: #3b82f6;
+  
+  /* Variables adicionales */
   --primary: #3b82f6;
   --primary-foreground: #ffffff;
-  --secondary: #1f2937;
-  --secondary-foreground: #f3f4f6;
-  --muted: #1f2937;
-  --muted-foreground: #9ca3af;
-  --accent: #1f2937;
-  --accent-foreground: #f3f4f6;
-  --destructive: #dc2626;
-  --destructive-foreground: #ffffff;
-  --border: #374151;
-  --input: #374151;
-  --ring: #3b82f6;
+  --secondary: #35383d;
+  --secondary-foreground: #f8fafc;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --accent: #1e293b;
+  --accent-foreground: #f8fafc;
 }
 
 body {
@@ -132,6 +160,68 @@ body {
 
 * {
   border-color: var(--border);
+}
+
+.border-custom {
+  border: 1.5px solid var(--border-color);
+}
+
+/* Borde animado para nav superior */
+.border-nav-animated {
+  border-bottom: 1.5px solid var(--border-color);
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  backdrop-filter: blur(12px);
+  background-color: var(--background); /* fallback si no usas /80 */
+}
+
+
+.navbar-cuarto {
+  background-color: var(--navbar-cuarto);
+  color: var(--navbar-cuarto-text);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.navbar-cuarto:hover {
+  background-color: var(--navbar-cuarto-hover);
+  color: var(--navbar-cuarto-text-hover);
+}
+
+/* Estilo animado para tabs */
+.tab-underline {
+  position: relative;
+  color: var(--text-muted);
+  transition: color 0.3s ease;
+}
+
+.tab-underline:hover {
+  color: var(--text-primary);
+}
+
+.tab-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background-color: transparent;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.tab-underline:hover::after {
+  background-color: var(--text-primary);
+  transform: scaleX(1);
+}
+
+.tab-underline-active {
+  color: var(--primary);
+}
+
+.tab-underline-active::after {
+  background-color: var(--primary);
+  transform: scaleX(1);
 }
 
 @layer base {

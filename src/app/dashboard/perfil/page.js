@@ -30,8 +30,8 @@ import {
     CardDescription,
 } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import AvatarPerfil from "@/components/avatar.perfil";
-import InformacionPerfil from "@/components/informacion.perfil";
+import AvatarPerfil from "@/app/dashboard/perfil/components/avatar.perfil";
+import InformacionPerfil from "@/app/dashboard/perfil/components/informacion.perfil";
 import { jwtDecode } from "jwt-decode"; // ✅ Esto funciona
 import { obtenerUsuarioPorId } from "@/api/endpoints/perfil";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -69,7 +69,7 @@ export default function PerfilPage() {
 
                 // Obtener datos reales desde el backend
                 const usuario = await obtenerUsuarioPorId(userId);
-                console.log("🚀 usuario aqui:", usuario);
+                // console.log("🚀 usuario aqui:", usuario);
                 setUsuario(usuario);
                 setEditedData(usuario);
                 setPageLoading(false); // Cargar la página si hay token
@@ -83,54 +83,14 @@ export default function PerfilPage() {
         fetchUserData();
     }, [router]);
 
-    console.log("🚀 usuario con estado:", usuario);
-
-    // Cargar datos del usuario
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                setLoading(true);
-                // Simular una llamada a la API
-                await new Promise((resolve) => setTimeout(resolve, 800));
-
-                // Datos de ejemplo
-                const data = {
-                    id: "USR-2024-0042",
-                    nombre: "María Rodríguez",
-                    email: "maria.rodriguez@empresa.com",
-                    direccion: "Lima, Perú",
-                    countryCode: "+51",
-                    phoneNumber: "987654321",
-                    documentoIdentidad: "45678912",
-                    fechaNacimiento: "1990-05-15",
-                    fotoPerfil: "https://randomuser.me/api/portraits/women/44.jpg",
-                    respuestaSecreta: "Firulais",
-                    rol: "Especialista",
-                    especialidad: "Recursos Humanos",
-                    sueldo: 3500,
-                    estado: "activo",
-                    fechaContratacion: "2022-03-10",
-                    departamento: "Administración",
-                    supervisor: "Carlos Mendoza",
-                    proyectosActivos: 3,
-                };
-
-                setUserData(data);
-                setEditedData(data);
-            } catch (error) {
-                console.error("Error al cargar datos del usuario:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchUserData();
-    }, []);
+    // console.log("🚀 usuario con estado:", usuario);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setEditedData((prev) => ({ ...prev, [name]: value }));
     };
+
+
 
     const handleBlockUnblock = () => {
         setIsBlocked(!isBlocked);
@@ -189,7 +149,7 @@ export default function PerfilPage() {
     return (
         <div className="flex flex-col min-h-screen bg-[var(--background)]">
             {/* Barra de navegación fija */}
-            <nav className="sticky top-0 z-50 backdrop-blur-lg bg-[var(--background)]/80 border-b border-[var(--border)]">
+            <nav className="sticky top-0 z-50 border-nav-animated bg-[var(--background)]/80">
                 <div className="flex items-center h-14 px-4">
                     <button
                         variant="ghost"
@@ -203,32 +163,32 @@ export default function PerfilPage() {
                 </div>
             </nav>
 
+
             {/* Contenido principal con scroll */}
             <div className="flex-1 overflow-y-auto">
                 <div className="p-0 md:p-6">
-                    <Card className="w-full max-w-full">
-                        <CardContent className="p-0 md:p-6">
-                            <div className="flex flex-col md:flex-row md:items-start md:gap-x-10 space-y-6 md:space-y-0">
-                                {/* Columna izquierda */}
-                                <div className="w-full md:w-auto md:sticky md:top-20">
-                                    <AvatarPerfil usuario={usuario} formatDate={formatDate} />
-                                </div>
-
-                                {/* Columna derecha con scroll independiente */}
-                                <div className="flex-1 overflow-y-auto pb-20 md:pb-0">
-                                    <InformacionPerfil
-                                        usuario={usuario}
-                                        formatDate={formatDate}
-                                        smsAlerts={smsAlerts}
-                                        calculateAge={calculateAge}
-                                        handleToggleSmsAlerts={handleToggleSmsAlerts}
-                                    />
-                                </div>
+                    <div className="w-full max-w-full">
+                        <div className="flex flex-col md:flex-row md:items-start md:gap-x-10 space-y-6 md:space-y-0">
+                            {/* Columna izquierda */}
+                            <div className="w-full md:w-auto md:sticky top-20 md:top-0">
+                                <AvatarPerfil usuario={usuario} formatDate={formatDate} />
                             </div>
-                        </CardContent>
-                    </Card>
+
+                            {/* Columna derecha con scroll independiente */}
+                            <div className="flex-1 overflow-y-auto pb-24 md:pb-0">
+                                <InformacionPerfil
+                                    usuario={usuario}
+                                    formatDate={formatDate}
+                                    smsAlerts={smsAlerts}
+                                    calculateAge={calculateAge}
+                                    handleToggleSmsAlerts={handleToggleSmsAlerts}
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
         </div>
     );
 }

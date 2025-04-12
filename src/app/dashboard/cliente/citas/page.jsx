@@ -18,7 +18,7 @@ export default function CitasPage() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="bg-[var(--background-secondary)] rounded-2xl p-8 mb-8 relative overflow-hidden border border-[var(--border)]"
+        className="bg-[var(--background-secondary)] rounded-2xl p-8 mb-8 relative overflow-hidden border-custom"
       >
         <div className="relative z-10">
           <h1 className="text-4xl font-bold mb-2 text-[var(--foreground)]">
@@ -45,7 +45,7 @@ export default function CitasPage() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Card className="bg-[var(--background-secondary)] border border-[var(--border)] rounded-2xl p-6 h-full">
+          <div className="bg-[var(--background-secondary)] border-custom rounded-2xl p-6 h-full">
             <CardHeader>
               <h2 className="text-2xl font-semibold text-[var(--foreground)]">
                 Programar Nueva Cita
@@ -54,7 +54,7 @@ export default function CitasPage() {
             <CardContent>
               <div className="space-y-6">
                 <motion.div whileHover={{ scale: 1.02 }}>
-                  <Button className="w-full flex items-center justify-center gap-3 px-6 py-5 text-lg bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white rounded-xl">
+                  <Button className="w-full flex items-center justify-center gap-3 px-6 py-5 text-lg bg-[var(--button)] hover:bg-[var(--button-hover)] text-white rounded-xl">
                     <Plus className="w-6 h-6" />
                     Agendar Cita Ahora
                   </Button>
@@ -74,7 +74,7 @@ export default function CitasPage() {
                 </div>
               </div>
             </CardContent>
-          </Card>
+          </div>
         </motion.div>
 
         {/* Listado de citas próximas */}
@@ -83,7 +83,7 @@ export default function CitasPage() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <Card className="bg-[var(--background-secondary)] border border-[var(--border)] rounded-2xl p-6">
+          <div className="bg-[var(--background-secondary)] border-custom rounded-2xl p-6">
             <CardHeader>
               <h2 className="text-2xl font-semibold text-[var(--foreground)]">
                 Próximas Citas
@@ -108,7 +108,7 @@ export default function CitasPage() {
                 2 citas programadas esta semana
               </p>
             </CardFooter>
-          </Card>
+          </div>
         </motion.div>
 
         {/* Sección de beneficios */}
@@ -116,7 +116,7 @@ export default function CitasPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="col-span-full bg-[var(--background-secondary)] rounded-2xl p-6 border border-[var(--border)] mb-16 md:mb-0"
+          className="col-span-full bg-[var(--background-secondary)] rounded-2xl p-6 border-custom mb-16 md:mb-0"
         >
           <h2 className="text-2xl font-bold mb-6 text-[var(--foreground)]">
             Beneficios Exclusivos
@@ -149,7 +149,7 @@ function CitaCard({ fecha, hora, mascota, tipo }) {
   return (
     <motion.div
       whileHover={{ translateX: 5 }}
-      className="p-4 bg-[var(--background)] rounded-lg border border-[var(--border)]"
+      className="p-4 bg-[var(--background)] rounded-lg border-custom"
     >
       <div className="flex justify-between items-start">
         <div>
@@ -170,7 +170,7 @@ function FeatureCard({ icon, title, description }) {
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
-      className="p-4 bg-[var(--background)] rounded-lg border border-[var(--border)]"
+      className="p-4 bg-[var(--background)] rounded-lg border-custom"
     >
       <div className="flex items-center gap-3 mb-2">
         <div className="p-2 bg-[var(--primary)] rounded-lg text-white">

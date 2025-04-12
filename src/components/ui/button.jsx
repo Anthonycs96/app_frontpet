@@ -8,18 +8,6 @@ export default function Button({
   isLoading = false,
   variant = "primary", // ✅ nueva prop
 }) {
-  // 🎨 Mapa de estilos según variante
-  const variants = {
-    primary:
-      "bg-[var(--button)] text-[var(--button-text)] hover:bg-[var(--button-hover)]",
-    secondary:
-      "bg-[var(--button-secondary)] text-[var(--button-secondary-text)] hover:bg-[var(--button-secondary-hover)]",
-    success:
-      "bg-[var(--button-success)] text-[var(--button-success-text)] hover:bg-[var(--button-success-hover)]",
-    danger:
-      "bg-[var(--button-danger)] text-[var(--button-danger-text)] hover:bg-[var(--button-danger-hover)]",
-  };
-
   return (
     <button
       type={type}
@@ -27,7 +15,6 @@ export default function Button({
       aria-busy={isLoading}
       disabled={isLoading}
       className={`
-        ${variants[variant] || variants.primary}
         px-4 py-2 rounded-lg shadow-md
         transition-all duration-300
         disabled:opacity-50 disabled:pointer-events-none

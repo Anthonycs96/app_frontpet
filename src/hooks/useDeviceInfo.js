@@ -1,31 +1,43 @@
-export function useDeviceInfo() {
-    const getDeviceInfo = () => {
-        const userAgent = navigator.userAgent;
-        const platform = navigator.userAgentData?.platform || navigator.platform;
+"use client"
 
-        let deviceType = "Dispositivo desconocido";
-        let browserName = "Navegador desconocido";
+import { useState, useEffect } from "react"
 
-        // Detectar sistema operativo
-        if (/Windows/.test(platform)) deviceType = "Windows";
-        else if (/Mac/.test(platform)) deviceType = "MacOS";
-        else if (/Linux/.test(platform)) deviceType = "Linux";
-        else if (/Android/.test(userAgent)) deviceType = "Android";
-        else if (/iPhone|iPad|iPod/.test(userAgent)) deviceType = "iOS";
+export const useDeviceInfo = () => {
+    const [deviceInfo, setDeviceInfo] = useState({
+        browserName: "",
+        deviceType: "",
+        lastActive: new Date().toLocaleTimeString(),
+    })
 
-        // Detectar navegador
-        if (userAgent.includes("Chrome")) browserName = "Chrome";
-        else if (userAgent.includes("Firefox")) browserName = "Firefox";
-        else if (userAgent.includes("Safari")) browserName = "Safari";
-        else if (userAgent.includes("Edge")) browserName = "Edge";
-        else if (userAgent.includes("Opera")) browserName = "Opera";
+    useEffect(() => {
+        const getBrowserName = () => {
+            const userAgent = navigator.userAgent
+            if (userAgent.indexOf("Chrome") > -1) return "Chrome"
+            else if (userAgent.indexOf("Safari") > -1) return "Safari"
+            else if (userAgent.indexOf("Firefox") > -1) return "Firefox"
+            else if (userAgent.indexOf("MSIE") > -1 || userAgent.indexOf("Trident/") > -1) return "Internet Explorer"
+            else return "Unknown"
+        }
 
-        return {
-            deviceType,
-            browserName,
-            lastActive: new Date().toLocaleString()
-        };
-    };
+        const getDeviceType = () => {
+            if (typeof window !== "undefined") {
+                if (window.innerWidth <= 768) {
+                    return "Mobile"
+                } else if (window.innerWidth <= 1024) {
+                    return "Tablet"
+                } else {
+                    return "Desktop"
+                }
+            }
+            return "Unknown"
+        }
 
-    return getDeviceInfo();
+        setDeviceInfo({
+            browserName: getBrowserName(),
+            deviceType: getDeviceType(),
+            lastActive: new Date().toLocaleTimeString(),
+        })
+    }, [])
+
+    return deviceInfo
 }

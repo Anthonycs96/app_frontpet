@@ -1,10 +1,9 @@
 "use client";
 
-import React from "react"; // Añade esta importación
-import Navbar from "@/components/Navbar";
-import TitleBar from "@/components/TitleBar";
+import React, { useState, useEffect } from "react"; // Añade esta importación
+import Navbar from "@/components/navbar/Navbar";
+import TitleBar from "@/components/navbar/TitleBar";
 import "@/styles/globals.css";
-import { useState, useEffect, Children, cloneElement } from "react";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode"; // ✅ Esto funciona
@@ -13,22 +12,17 @@ import { AuthContext } from "@/context/AuthContext";
 
 export default function DashboardLayout({ children }) {
   const [darkMode, setDarkMode] = useState("white"); // opciones: "dark", "white"
-  // Aquí controlamos si está expandido
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false); // Control para el estado expandido
+  const [isLoading, setIsLoading] = useState(true); // Cargando hasta que se verifique el token
   const [usuario, setUsuario] = useState(null);
-  const [rol, setRol] = useState(null); // ⬅️ nuevo estado para el rol
+  const [rol, setRol] = useState(null); // Estado para el rol
   const router = useRouter();
 
-  // console.log("Tipo de children:", typeof children);
-  // console.log("Children:", children);
-
-  // ⬇️ Esta parte detecta el tema del sistema y aplica la clase correspondiente
+  // Control del tema (oscuro o claro)
   useEffect(() => {
     const html = document.documentElement;
-
     const handleThemeChange = (e) => {
-      html.classList.remove("dark", "white"); // limpia antes de aplicar
+      html.classList.remove("dark", "white"); // Limpiar antes de aplicar
 
       if (e.matches) {
         html.classList.add("dark");
@@ -49,57 +43,45 @@ export default function DashboardLayout({ children }) {
     };
   }, []);
 
-  // Verifica autenticación
+  // Verificación de token
   useEffect(() => {
     const verificarToken = async () => {
       const token = localStorage.getItem("token");
-      //console.log("Token actual:", token);
 
       if (!token) {
-        router.push("/auth/login");
+        router.push("/auth/login"); // Redirige si no hay token
         return;
       }
 
       try {
         const decoded = jwtDecode(token);
-        //console.log("Decoded token layout:", decoded.rol);
-        // ✅ Guarda el rol en estado apenas lo decodificas
-        setRol(decoded.rol);
+        setRol(decoded.rol); // Guarda el rol decodificado en el estado
 
         if (!decoded.id) {
           throw new Error("Token inválido: falta ID");
         }
 
-        // Verifica expiración
+        // Verificar expiración del token
         const currentTime = Date.now() / 1000;
         if (decoded.exp < currentTime) {
           localStorage.removeItem("token");
-          router.push("/auth/login");
+          router.push("/auth/login"); // Redirigir si el token está expirado
           return;
         }
 
-        // Si todo está bien, puedes llamar al backend
+        // Obtener usuario de la API si el token es válido
         const usuario = await obtenerUsuarioPorId(decoded.id);
         setUsuario(usuario);
-        console.log("Usuario autenticado:", usuario.usuario.rol);
-        setIsLoading(false); // Token válido y usuario confirmado
+        setIsLoading(false); // Terminar la carga si el usuario es válido
       } catch (error) {
         console.error("Error de autenticación:", error.message);
         localStorage.removeItem("token");
-        router.push("/auth/login");
+        router.push("/auth/login"); // Redirigir si el token es inválido
       }
     };
 
     verificarToken();
   }, [router]);
-
-  // useEffect(() => {
-  //   console.log("Estado actual en layout:", {
-  //     usuario: usuario?.usuario,
-  //     rol: rol,
-  //     isLoading,
-  //   });
-  // }, [usuario, rol, isLoading]);
 
   if (isLoading) {
     return (
@@ -108,6 +90,7 @@ export default function DashboardLayout({ children }) {
       </div>
     );
   }
+
   return (
     <div className="min-h-screen flex">
       <Navbar
@@ -119,12 +102,9 @@ export default function DashboardLayout({ children }) {
       <TitleBar isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
 
       <main
-        className={`
-          px-4 sm:pr-20 sm:py-12 transition-all duration-300
-          ${isExpanded ? "sm:ml-64" : "sm:ml-16"}
-          w-full overflow-x-hidden relative
-          max-w-full
-        `}
+        className={`px-4 sm:pr-10 sm:py-12 transition-all duration-300 ${
+          isExpanded ? "sm:ml-64" : "sm:ml-16"
+        } w-full overflow-x-hidden relative max-w-full`}
       >
         <div className="w-full mx-auto sm:px-4 max-w-full">
           <AuthContext.Provider

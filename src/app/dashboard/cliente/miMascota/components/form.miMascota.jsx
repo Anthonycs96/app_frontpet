@@ -14,10 +14,11 @@ export default function FormRegistrarMiMascota({ toggleModal, onSubmit }) {
   const [razaSeleccionada, setRazaSeleccionada] = useState("");
   const [esMestizo, setEsMestizo] = useState(false);
   const [tieneAlergias, setTieneAlergias] = useState(false);
+  const [genero, setGenero] = useState("");
 
   const [fotoPerfil, setFotoPerfil] = useState("");
   const [nombre, setNombre] = useState("");
-  const [fechaNacimiento, setFechaNacimiento] = useState("");
+  const [fecha_nacimiento, setFechaNacimiento] = useState("");
   const [alergias, setAlergias] = useState("");
   const [descripcion, setDescripcion] = useState("");
 
@@ -56,7 +57,7 @@ export default function FormRegistrarMiMascota({ toggleModal, onSubmit }) {
     e.preventDefault();
 
     if (!nombre.trim()) return alert("Nombre es obligatorio.");
-    if (!fechaNacimiento) return alert("Fecha de nacimiento es obligatoria.");
+    if (!fecha_nacimiento) return alert("Fecha de nacimiento es obligatoria.");
     if (!especie) return alert("Especie es obligatoria.");
     if (!descripcion.trim()) return alert("Descripción es obligatoria.");
     if (!fotoPerfil.trim()) return alert("Foto de perfil es obligatoria.");
@@ -66,28 +67,30 @@ export default function FormRegistrarMiMascota({ toggleModal, onSubmit }) {
     const raza = esMestizo ? "Mestizo/a" : razaSeleccionada;
     if (!raza) return alert("Selecciona una raza o marca como mestizo/a.");
 
-    const datos = {
+    // Llama a la función onSubmit que viene como prop
+    onSubmit({
       nombre,
-      fechaNacimiento,
+      fecha_nacimiento,
       especie,
       raza,
+      genero,
       fotoPerfil,
       alergias: tieneAlergias ? alergias : "",
       descripcion,
-    };
-
-    // Llama a la función onSubmit que viene como prop
-    onSubmit(datos);
+    });
     toggleModal();
   };
 
   return (
-    <div className="bg-[var(--background-secondary)] text-[var(--foreground)] rounded-2xl shadow-2xl w-full max-w-md sm:max-w-lg md:max-w-xl p-6 border border-white/10">
-      <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center">
+    <div className="text-[var(--foreground)] rounded-2xl shadow-2xl w-full max-w-md sm:max-w-lg md:max-w-xl max-h-screen overflow-y-auto p-4">
+      <h2 className="text-xl sm:text-2xl font-bold  text-center mb-4 text-[var(--foreground)]">
         Agregar a tu mascota
       </h2>
 
-      <form className="space-y-4" onSubmit={handleSubmit}>
+      <form
+        className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        onSubmit={handleSubmit}
+      >
         {/* Imagen */}
         <div className="space-y-2">
           <Label htmlFor="fotoPerfil" className="flex items-center gap-2">
@@ -114,23 +117,39 @@ export default function FormRegistrarMiMascota({ toggleModal, onSubmit }) {
             placeholder="Ej. Firulais"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
-            className="w-full"
           />
         </div>
 
         {/* Fecha */}
         <div className="grid gap-2">
-          <Label htmlFor="fechaNacimiento" className="flex items-center gap-2">
+          <Label htmlFor="fecha_Nacimiento" className="flex items-center gap-2">
             <Calendar size={16} className="text-primary" />
             Fecha de Nacimiento
           </Label>
           <Input
-            id="fechaNacimiento"
+            id="fecha_Nacimiento"
             type="date"
-            value={fechaNacimiento}
+            value={fecha_nacimiento}
             onChange={(e) => setFechaNacimiento(e.target.value)}
-            className="w-full"
           />
+        </div>
+        {/* genero */}
+        <div className="grid gap-2">
+          <Label htmlFor="genero" className="flex items-center gap-2">
+            <Tag size={16} className="text-primary" />
+            Género
+          </Label>
+          <select
+            id="genero"
+            value={genero}
+            onChange={(e) => setGenero(e.target.value)}
+            className="w-full p-2 border rounded-xl"
+            required
+          >
+            <option value="">Selecciona género</option>
+            <option value="Macho">Macho</option>
+            <option value="Hembra">Hembra</option>
+          </select>
         </div>
 
         {/* Especie */}
@@ -181,7 +200,7 @@ export default function FormRegistrarMiMascota({ toggleModal, onSubmit }) {
               value={razaSeleccionada}
               onChange={(e) => setRazaSeleccionada(e.target.value)}
               disabled={!razas.length}
-              className="w-full p-2 border rounded-xl"
+              className="p-2 border rounded-xl"
             >
               <option value="">Selecciona raza</option>
               {razas.map((raza, i) => (
@@ -216,7 +235,6 @@ export default function FormRegistrarMiMascota({ toggleModal, onSubmit }) {
               placeholder="Ej. Alergico a la arena"
               value={alergias}
               onChange={(e) => setAlergias(e.target.value)}
-              className="w-full"
             />
           </div>
         )}
@@ -236,17 +254,18 @@ export default function FormRegistrarMiMascota({ toggleModal, onSubmit }) {
         </div>
 
         {/* Botones */}
-        <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-4">
+        <div className="md:col-span-2 flex flex-col-reverse sm:flex-row justify-end gap-2 pt-4">
           <Button
             type="button"
             onClick={toggleModal}
-            className="bg-[var(--muted)] text-[var(--foreground)]"
+            className="bg-[var(--button-danger)] hover:bg-[var(--button-danger-hover)] text-white"
           >
             Cancelar
           </Button>
           <Button
             type="submit"
-            className="bg-[var(--primary)] text-white hover:bg-opacity-90"
+            className="bg-[var(--button)] hover:bg-[var(--button-hover)] text-white"
+            disabled={!nombre || !fecha_nacimiento || !especie || !descripcion}
           >
             Guardar
           </Button>

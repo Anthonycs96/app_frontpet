@@ -14,7 +14,7 @@ export default function InicioPage() {
   //const [usuario, setUsuario] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { usuario, rol } = useAuth();
-  console.log("usuarios en inicio:", usuario);
+  // console.log("usuarios en inicio:", usuario);
 
   // useEffect se ejecuta cada vez que cambian los searchParams (parámetros de la URL)
   useEffect(() => {
@@ -73,7 +73,7 @@ export default function InicioPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-[var(--background-secondary)] rounded-2xl p-8 mb-8 relative overflow-hidden border border-[var(--border)]"
+        className="bg-[var(--background-secondary)] rounded-2xl p-8 mb-8 relative overflow-hidden border-custom"
       >
         <div className="relative z-10">
           <h1 className="text-4xl font-bold mb-4 text-[var(--foreground)]">
@@ -128,25 +128,32 @@ export default function InicioPage() {
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.4 }}
-        className="bg-[var(--background-secondary)] rounded-xl shadow-sm p-6 mb-8"
+        className="bg-[var(--background-elevated)] rounded-xl shadow-md p-6 mb-8 transition-colors"
       >
-        <h2 className="text-2xl font-bold mb-6">Próximas Citas</h2>
+        <h2 className="text-2xl font-bold mb-6 text-[var(--foreground)]">
+          Próximas Citas
+        </h2>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {proximasCitas.map((cita, index) => (
             <div
               key={index}
-              className="border rounded-lg p-4 hover:bg-gray-50 transition-colors"
+              className="border-custom bg-[var(--background-secondary)] rounded-lg p-4 hover:bg-[var(--background-tertiary)] transition-colors shadow-sm"
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-semibold text-lg hover:text-[var(--foreground)]">
+                  <h3 className="font-semibold text-lg text-[var(--foreground)]">
                     {cita.mascota}
                   </h3>
                   <p className="text-[var(--muted-foreground)]">{cita.tipo}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-medium text-blue-600">{cita.fecha}</p>
-                  <p className="text-sm text-gray-500">{cita.hora}</p>
+                  <p className="font-medium text-[var(--text-primary)]">
+                    {cita.fecha}
+                  </p>
+                  <p className="text-sm text-[var(--text-muted)]">
+                    {cita.hora}
+                  </p>
                 </div>
               </div>
             </div>
@@ -159,7 +166,7 @@ export default function InicioPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
-        className="bg-[var(--background-secondary)] rounded-xl shadow-sm p-6 mb-16 md:mb-0"
+        className="bg-[var(--background-elevated)] rounded-xl shadow-sm p-6 mb-16 md:mb-0"
       >
         <h2 className="text-2xl font-bold mb-6">Tips para tu Mascota</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -187,13 +194,16 @@ function QuickActionCard({ icon, title, description, color }) {
     <motion.div
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      className={`${color} rounded-xl p-6 border border-[var(--border)] hover:bg-[var(--button-tertiary-hover)]`}
+      className={`${color} rounded-xl p-6 border-custom 
+        hover:bg-[var(--background-tertiary)] 
+        transition-all duration-200 shadow-sm
+        hover:shadow-md`}
     >
       <motion.div
         initial={{ scale: 0.8 }}
         animate={{ scale: 1 }}
         transition={{ duration: 0.2 }}
-        className="text-2xl mb-4"
+        className="text-2xl mb-4 text-[var(--primary)]"
       >
         {icon}
       </motion.div>
@@ -210,12 +220,14 @@ function TipCard({ title, description }) {
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
-      className="border rounded-lg p-4 hover:bg-[var(--button-tertiary-hover)] transition-colors"
+      className="bg-[var(--background-secondary)] hover:bg-[var(--background-tertiary)]
+    border-custom rounded-xl p-5 transition-all duration-300
+    shadow-sm hover:shadow-lg"
     >
       <h3 className="font-semibold text-lg mb-2 text-[var(--foreground)]">
         {title}
       </h3>
-      <p className="text-[var(--muted-foreground)]">{description}</p>
+      <p className="text-sm text-[var(--muted-foreground)]">{description}</p>
     </motion.div>
   );
 }
